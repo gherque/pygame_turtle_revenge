@@ -24,7 +24,7 @@ class Hero(GameObject):
 
         _, clip = AssetManager.instance().get(AssetType.SpriteSheet, Config.turtle_walk[self.__walk_index], sheet_name = Config.turtle_spritesheet_name)
 
-        self.position = pygame.math.Vector2(15, Config.screen_size[1] - 40)
+        self.position = pygame.math.Vector2(Config.turtle_initial_position)
         self.rect = clip.copy()
         self.rect.inflate_ip(self.rect.width * -0.60, self.rect.height * -0.2)
 
@@ -44,6 +44,7 @@ class Hero(GameObject):
             self.__is_moving_right = is_pressed
         elif key == pygame.K_SPACE:
             self.__is_attacking = is_pressed
+            # TODO: Play sound
             if self.__cool_down_time <= 0.0:
                 self.__fire_bullet()
 
@@ -79,10 +80,10 @@ class Hero(GameObject):
         self.__attack_index = min(self.__attack_index + Config.turtle_speed * delta / 13, 2) if self.__is_attacking else self.__attack_index
 
         if self.__is_moving_down:
-            # TODO: Cuando toca con algo debe parar aunque no haya llegado al y origen (ej. cae encima de un piso superior)
-            if self.position.y >= Config.screen_size[1] - 40:
+            # TODO: Cuando toca con algo debe parar aunque no haya llegado al y origen (ej. cae encima de un piso superior). Ahora está en tamaño de la pantalla - 40 pero si hay hueco en el piso no debería parar ahí y debería morir
+            if self.position.y >= Config.turtle_initial_position[1]:
                 self.__is_moving_down = False
-                self.position.y = Config.screen_size[1] - 40
+                self.position.y = Config.turtle_initial_position[1]
                 self.__jumping_height = 0
 
         if self.__cool_down_time > 0.0:

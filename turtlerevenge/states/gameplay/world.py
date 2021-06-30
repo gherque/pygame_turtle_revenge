@@ -3,19 +3,22 @@ import pygame
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
 from turtlerevenge.entities.rendergroup import RenderGroup
 from turtlerevenge.entities.hero import Hero
-from turtlerevenge.entities.projectile import Projectile, ProjectileType
-from turtlerevenge.entities.explosion import Explosion
-from turtlerevenge.entities.enemies.enemy import Enemy
+# from turtlerevenge.entities.projectile import Projectile, ProjectileType
+# from turtlerevenge.entities.explosion import Explosion
+# from turtlerevenge.entities.enemies.enemy import Enemy
+from turtlerevenge.entities.sceneItem import SceneItem
 from turtlerevenge.assets.sound_manager import SoundManager
-from turtlerevenge.assets.parallax import Parallax
-from turtlerevenge.states.gameplay.spawner import Spawner
+# from turtlerevenge.assets.parallax import Parallax
+# from turtlerevenge.states.gameplay.spawner import Spawner
 from turtlerevenge.config import Config
 from turtlerevenge.states.gameplay.events import game_over_event, end_game_event
 
 class World:
 
     def __init__(self):
+        self.screenCenterX = Config.screen_size[0] / 2
         self.__players = RenderGroup()
+        self.__sceneItems = RenderGroup()
         # self.__allied_bullets = RenderGroup()
         # self.__enemy_bullets = RenderGroup()
         # self.__explosions = RenderGroup()
@@ -23,6 +26,12 @@ class World:
 
     def init(self):
         self.__players.add(Hero(self))
+        # TODO: Pintar los escenarios según el config. Ahora sólo pinta piso hasta primer agujero
+        # TODO: Ver cómo ir moviendo el escenario con el hero
+        # TODO: Pintar nubes, arbustos y montañas en otro grupo para que las colisiones no hagan nada
+        for i in range(70):
+            self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
+            self.__sceneItems.add(SceneItem(self, Config.scene_floor_under, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
 
         # self.__parallax = Parallax()
         # self.__parallax.add_background(Config.jungle_name, 0, Config.jungle_speed)
@@ -38,6 +47,7 @@ class World:
 
     def update(self, delta_time):
         self.__players.update(delta_time)
+        self.__sceneItems.update(delta_time)
         # self.__enemies.update(delta_time)
         # self.__allied_bullets.update(delta_time)
         # self.__enemy_bullets.update(delta_time)
@@ -59,6 +69,7 @@ class World:
     def render(self, surface):
         # self.__parallax.render(surface)
         self.__players.draw(surface)
+        self.__sceneItems.draw(surface)
         # self.__enemies.draw(surface)
         # self.__allied_bullets.draw(surface)
         # self.__enemy_bullets.draw(surface)
@@ -67,6 +78,7 @@ class World:
 
     def quit(self):
         self.__players.empty()
+        self.__sceneItems.empty()
         # self.__enemies.empty()
         # self.__allied_bullets.empty()
         # self.__enemy_bullets.empty()

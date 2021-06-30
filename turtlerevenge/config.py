@@ -46,11 +46,37 @@ class Config:
     turtle_walk_reverse = ["walk1_reverse", "walk2_reverse", "walk3_reverse", "walk4_reverse"]
     turtle_jump_reverse = "jump_reverse"
     turtle_attack_reverse = ["attack1_reverse", "attack2_reverse", "attack3_reverse"]
+    scene_spritesheet_name = "environmentSpriteSheet"
+    scene_spritesheet_filename = ["turtlerevenge", "assets", "images", "environmentSpriteSheet.png"]
+    scene_spritesheet_coordinates_filename = ["turtlerevenge", "assets", "images", "environmentSpriteSheetCoordinates.json"]
+    scene_floor = "floor"
+    scene_floor_corner_left = "floor_corner_left"
+    scene_floor_corner_right = "floor_corner_right"
+    scene_floor_under = "floor_under"
+    scene_floor_under_left = "floor_under_left"
+    scene_floor_under_right = "floor_under_right"
+
+    # Hero config
     turtle_speed = 0.15
     turtle_fire_cooldown = 300
     turtle_max_jumping_height = 100.0
+    turtle_initial_position = (15, screen_size[1] - 48 - 32 + 24)
 
+    # Scene
+    # scene = [
+    #     # Level 0
+    #     {
+    #         floorHolesCoordinates: [()]
+    #     },
+    #     # Level 1
+    #     {
 
+    #     },
+    #     # Level 2
+    #     {
+
+    #     }
+    # ]
 
     # explosion_name = "explosion"
     # explosion_image_filename = ["turtlerevenge", "assets", "images", "explosion.png"]

@@ -61,7 +61,6 @@ class Game:
         SoundManager.instance().update(delta_time)
 
     def __render(self):
-        self.__window.fill(Config.background_color)
         self.__state_manager.render(self.__window)
 
         if Config.debug:

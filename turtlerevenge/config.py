@@ -6,6 +6,7 @@ class Config:
     screen_size = (640, 480)
     game_title = "Turtle Revenge"
     background_color = (0, 0, 0)
+    gaming_background_color = (0, 138, 197)
 
     # Font info
     font_filename = ["turtlerevenge", "assets", "fonts", "Turtles.ttf"]
@@ -42,9 +43,14 @@ class Config:
     turtle_walk = ["walk1", "walk2", "walk3", "walk4"]
     turtle_jump = "jump"
     turtle_attack = ["attack1", "attack2", "attack3"]
+    turtle_walk_reverse = ["walk1_reverse", "walk2_reverse", "walk3_reverse", "walk4_reverse"]
+    turtle_jump_reverse = "jump_reverse"
+    turtle_attack_reverse = ["attack1_reverse", "attack2_reverse", "attack3_reverse"]
     turtle_speed = 0.15
     turtle_fire_cooldown = 300
-    turtle_max_jumping_height = 30
+    turtle_max_jumping_height = 100.0
+
+
 
     # explosion_name = "explosion"
     # explosion_image_filename = ["turtlerevenge", "assets", "images", "explosion.png"]
@@ -57,11 +63,6 @@ class Config:
     # clouds_name = "clouds"
     # clouds_image_filename = ["turtlerevenge", "assets", "images", "clouds.png"]
     # clouds_speed = 0.4
-
-    # hero_left_entity_name = "eagle_left"
-    # hero_right_entity_name = "eagle_right"
-    # allied_bullet_entity_name = "allied_bullet"
-    # enemy_bullet_entity_name = "enemy_bullet"
 
     # allied_gunfire_name = "allied_gunfire"
     # allied_gunfire_filename = ["turtlerevenge", "assets", "sfx", "allied_gunfire.wav"]

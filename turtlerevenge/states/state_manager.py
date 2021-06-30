@@ -1,4 +1,5 @@
 from turtlerevenge.states.about import About
+from turtlerevenge.config import Config
 from turtlerevenge.states.intro import Intro
 from turtlerevenge.states.gameEnd import GameEnd
 from turtlerevenge.states.gameOver import GameOver
@@ -28,6 +29,7 @@ class StateManager:
         self.__current_state.update(delta_time)
 
     def render(self, surface):
+        surface.fill(Config.gaming_background_color if self.__current_state_name == "GamePlay" else Config.background_color)
         self.__current_state.render(surface)
 
     def quit(self):

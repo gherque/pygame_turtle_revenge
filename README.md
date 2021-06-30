@@ -5,6 +5,7 @@
 ### Resources
 
 **Color Palette:** https://colorswall.com/palette/4183/
+**More Palette:** https://www.colourlovers.com/color/008AC5/Marios_Sky_Blue
 **Font:** https://www.dafont.com/es/turtles.font
 **Music themes:** https://soundcloud.com/aprilo-neil/sets/teenage-mutant-ninja-turtles
 **Turtles sprites:** https://retrogamezone.co.uk/teenagemutantninjaturtles.htm

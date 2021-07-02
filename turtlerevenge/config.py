@@ -7,6 +7,7 @@ class Config:
     game_title = "Turtle Revenge"
     background_color = (0, 0, 0)
     gaming_background_color = (0, 138, 197)
+    current_level = 0
 
     # Font info
     font_filename = ["turtlerevenge", "assets", "fonts", "Turtles.ttf"]
@@ -40,21 +41,23 @@ class Config:
     turtle_spritesheet_name = "turtleSpriteSheet"
     turtle_spritesheet_filename = ["turtlerevenge", "assets", "images", "turtleSpriteSheet.gif"]
     turtle_spritesheet_coordinates_filename = ["turtlerevenge", "assets", "images", "turtleSpriteSheetCoordinates.json"]
+    mario_spritesheet_name = "marioSpriteSheet"
+    mario_spritesheet_filename = ["turtlerevenge", "assets", "images", "marioSpriteSheet.gif"]
+    mario_spritesheet_coordinates_filename = ["turtlerevenge", "assets", "images", "marioSpriteSheetCoordinates.json"]
+
+    # SpriteSheets item names
     turtle_walk = ["walk1", "walk2", "walk3", "walk4"]
     turtle_jump = "jump"
     turtle_attack = ["attack1", "attack2", "attack3"]
     turtle_walk_reverse = ["walk1_reverse", "walk2_reverse", "walk3_reverse", "walk4_reverse"]
     turtle_jump_reverse = "jump_reverse"
     turtle_attack_reverse = ["attack1_reverse", "attack2_reverse", "attack3_reverse"]
-    scene_spritesheet_name = "environmentSpriteSheet"
-    scene_spritesheet_filename = ["turtlerevenge", "assets", "images", "environmentSpriteSheet.png"]
-    scene_spritesheet_coordinates_filename = ["turtlerevenge", "assets", "images", "environmentSpriteSheetCoordinates.json"]
     scene_floor = "floor"
-    scene_floor_corner_left = "floor_corner_left"
-    scene_floor_corner_right = "floor_corner_right"
-    scene_floor_under = "floor_under"
-    scene_floor_under_left = "floor_under_left"
-    scene_floor_under_right = "floor_under_right"
+    scene_cloud_single = "cloud_single"
+    scene_cloud_double = "cloud_double"
+    scene_cloud_triple = "cloud_triple"
+    scene_mountain_small = "mountain_small"
+    scene_mountain_big = "mountain_big"
 
     # Hero config
     turtle_speed = 0.15
@@ -63,20 +66,53 @@ class Config:
     turtle_initial_position = (15, screen_size[1] - 48 - 32 + 24)
 
     # Scene
-    # scene = [
-    #     # Level 0
-    #     {
-    #         floorHolesCoordinates: [()]
-    #     },
-    #     # Level 1
-    #     {
-
-    #     },
-    #     # Level 2
-    #     {
-
-    #     }
-    # ]
+    scene = [
+        # Level 0
+        {
+            "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole without corner, number of pieces of hole)
+                (70, 2),
+                (15, 3),
+                (64, 2),
+                (69, 0)
+            ],
+            "clouds": {
+                "single": [ # Array of coordinates
+                    (9 * 16 + 17, 150 + 27),
+                    (19 * 16 + 17, 150),
+                    (56 * 16 + 17, 150 + 27),
+                    (66 * 16 + 17, 150),
+                    (103 * 16 + 17, 150 + 27),
+                    (113 * 16 + 17, 150),
+                    (150 * 16 + 17, 150 + 27),
+                    (160 * 16 + 17, 150),
+                    (193 * 16 + 17, 150 + 27),
+                    (203 * 16 + 17, 150)
+                ],
+                "double": [ # Array of coordinates
+                    (35 * 16 + 25, 150),
+                    (82 * 16 + 25, 150),
+                    (129 * 16 + 25, 150),
+                    (176 * 16 + 25, 150),
+                    (223 * 16 + 25, 150)
+                ],
+                "triple": [ # Array of coordinates
+                    (26 * 16 + 33, 150 + 27),
+                    (73 * 16 + 33, 150 + 27),
+                    (110 * 16 + 33, 150 + 27),
+                    (147 * 16 + 33, 150 + 27),
+                    (184 * 16 + 33, 150 + 27)
+                ]
+            },
+            "mountains": {
+                "small": [ # Array of coordinates
+                    (16 * 16 + 26, screen_size[1] - 16 * 2 - 10)
+                ],
+                "big": [ # Array of coordinates
+                    (0 * 16 + 43, screen_size[1] - 16 * 2 - 18)
+                ]
+            }
+        }
+    ]
 
     # explosion_name = "explosion"
     # explosion_image_filename = ["turtlerevenge", "assets", "images", "explosion.png"]

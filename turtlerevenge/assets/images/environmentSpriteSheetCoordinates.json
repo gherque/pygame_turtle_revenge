@@ -1,8 +1,0 @@
-{
-    "floor" : [322,42,16,16],
-    "floor_corner_left" : [302,42,16,16],
-    "floor_corner_right" : [342,42,16,16],
-    "floor_under" : [322,62,16,16],
-    "floor_under_left" : [302,62,16,16],
-    "floor_under_right" : [342,62,16,16]
-}

@@ -9,7 +9,7 @@
 **Font:** https://www.dafont.com/es/turtles.font
 **Music themes:** https://soundcloud.com/aprilo-neil/sets/teenage-mutant-ninja-turtles
 **Turtles sprites:** https://retrogamezone.co.uk/teenagemutantninjaturtles.htm
-**Mario sprites:** https://elpresentemedistrae.wordpress.com/2017/03/17/stop-motion-y-pixilacion-intento-1/
+**Mario sprites:** https://c0.klipartz.com/pngpicture/800/715/gratis-png-super-mario-fail-parodia-ilustracion-super-mario-bros-3-nuevos-super-mario-bros-super-mario-bros-2-mario-bros-thumbnail.png
 
 ### Other references
 

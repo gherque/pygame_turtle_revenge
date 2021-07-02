@@ -9,9 +9,7 @@ class SceneItem(GameObject):
     def __init__(self, world, type, coordinates):
         super().__init__()
 
-        AssetManager.instance().load(AssetType.SpriteSheet, Config.scene_spritesheet_name, Config.scene_spritesheet_filename, data_filename = Config.scene_spritesheet_coordinates_filename)
-
-        self.image, self.clip = AssetManager.instance().get(AssetType.SpriteSheet, type, sheet_name = Config.scene_spritesheet_name)
+        self.image, self.clip = AssetManager.instance().get(AssetType.SpriteSheet, type, sheet_name = Config.mario_spritesheet_name)
 
         self.position = pygame.math.Vector2(coordinates)
         self.rect = self.clip.copy()

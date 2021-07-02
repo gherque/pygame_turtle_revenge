@@ -19,6 +19,7 @@ class World:
         self.screenCenterX = Config.screen_size[0] / 2
         self.__players = RenderGroup()
         self.__sceneItems = RenderGroup()
+        self.__transparentSceneItems = RenderGroup()
         # self.__allied_bullets = RenderGroup()
         # self.__enemy_bullets = RenderGroup()
         # self.__explosions = RenderGroup()
@@ -26,12 +27,35 @@ class World:
 
     def init(self):
         self.__players.add(Hero(self))
-        # TODO: Pintar los escenarios según el config. Ahora sólo pinta piso hasta primer agujero
+        # TODO: Pintar los escenarios rígidos (falta cuadrados tipo escalera, tubos y estructuras volantes)
         # TODO: Ver cómo ir moviendo el escenario con el hero
-        # TODO: Pintar nubes, arbustos y montañas en otro grupo para que las colisiones no hagan nada
-        for i in range(70):
-            self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
-            self.__sceneItems.add(SceneItem(self, Config.scene_floor_under, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
+        # TODO: Pintar arbustos, banderola y castillo en otro grupo para que las colisiones no hagan nada
+        # TODO: Colisiones con escenario: revisar colisiones para no dejar mover o quedarse en niveles superiores y detectar NO colisiones para bajar de nivel o salir del escenario (morir)
+
+        AssetManager.instance().load(AssetType.SpriteSheet, Config.mario_spritesheet_name, Config.mario_spritesheet_filename, data_filename = Config.mario_spritesheet_coordinates_filename)
+
+        # Main floor
+        i = 0
+        for floorHole in Config.scene[Config.current_level]["floorHoles"]:
+            for j in range(floorHole[0]):
+                self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
+                self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
+                i += 1
+            i += floorHole[1]
+
+        # Clouds
+        for single_cloud in Config.scene[Config.current_level]["clouds"]["single"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_cloud_single, single_cloud))
+        for double_cloud in Config.scene[Config.current_level]["clouds"]["double"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_cloud_double, double_cloud))
+        for triple_cloud in Config.scene[Config.current_level]["clouds"]["triple"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_cloud_triple, triple_cloud))
+
+        # Mountains
+        for small_mountain in Config.scene[Config.current_level]["mountains"]["small"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_mountain_small, small_mountain))
+        for big_mountain in Config.scene[Config.current_level]["mountains"]["big"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_mountain_big, big_mountain))
 
         # self.__parallax = Parallax()
         # self.__parallax.add_background(Config.jungle_name, 0, Config.jungle_speed)
@@ -48,6 +72,7 @@ class World:
     def update(self, delta_time):
         self.__players.update(delta_time)
         self.__sceneItems.update(delta_time)
+        self.__transparentSceneItems.update(delta_time)
         # self.__enemies.update(delta_time)
         # self.__allied_bullets.update(delta_time)
         # self.__enemy_bullets.update(delta_time)
@@ -68,8 +93,9 @@ class World:
 
     def render(self, surface):
         # self.__parallax.render(surface)
-        self.__players.draw(surface)
         self.__sceneItems.draw(surface)
+        self.__transparentSceneItems.draw(surface)
+        self.__players.draw(surface)
         # self.__enemies.draw(surface)
         # self.__allied_bullets.draw(surface)
         # self.__enemy_bullets.draw(surface)
@@ -79,6 +105,7 @@ class World:
     def quit(self):
         self.__players.empty()
         self.__sceneItems.empty()
+        self.__transparentSceneItems.empty()
         # self.__enemies.empty()
         # self.__allied_bullets.empty()
         # self.__enemy_bullets.empty()

@@ -1,0 +1,8 @@
+{
+    "floor": [373,124,16,16],
+    "cloud_single": [160, 196, 35, 27],
+    "cloud_double": [45, 196, 50, 27],
+    "cloud_triple": [94, 196, 68, 27],
+    "mountain_small": [46, 174, 52, 22],
+    "mountain_big": [96, 158, 85, 38]
+}

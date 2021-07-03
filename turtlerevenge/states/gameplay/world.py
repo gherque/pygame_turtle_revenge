@@ -26,22 +26,14 @@ class World:
         # self.__enemies = RenderGroup()
 
     def init(self):
-        self.__players.add(Hero(self))
-        # TODO: Pintar los escenarios rígidos (falta cuadrados tipo escalera, tubos y estructuras volantes)
-        # TODO: Ver cómo ir moviendo el escenario con el hero
-        # TODO: Pintar arbustos, banderola y castillo en otro grupo para que las colisiones no hagan nada
+        # TODO: Pintar los escenarios rígidos (falta addons (interrogantes))
+        # TODO: Pintar enemigos (setas, luigis, marios)
+        # TODO: Colisiones con enemigos (si es por arriba o atacando hacia el lado del enemigo -> ganar, si no morir)
+        # TODO: Pintar amigos (tortugas, tortugas con pinchos)
+        # TODO: Colisiones con amigos --> saludo pero con retardo por si vienen varios seguidos no quedarse hablando todo el rato
         # TODO: Colisiones con escenario: revisar colisiones para no dejar mover o quedarse en niveles superiores y detectar NO colisiones para bajar de nivel o salir del escenario (morir)
 
         AssetManager.instance().load(AssetType.SpriteSheet, Config.mario_spritesheet_name, Config.mario_spritesheet_filename, data_filename = Config.mario_spritesheet_coordinates_filename)
-
-        # Main floor
-        i = 0
-        for floorHole in Config.scene[Config.current_level]["floorHoles"]:
-            for j in range(floorHole[0]):
-                self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
-                self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
-                i += 1
-            i += floorHole[1]
 
         # Clouds
         for single_cloud in Config.scene[Config.current_level]["clouds"]["single"]:
@@ -57,6 +49,58 @@ class World:
         for big_mountain in Config.scene[Config.current_level]["mountains"]["big"]:
             self.__transparentSceneItems.add(SceneItem(self, Config.scene_mountain_big, big_mountain))
 
+        # Bushs
+        for single_bush in Config.scene[Config.current_level]["bushs"]["single"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_bush_single, single_bush))
+        for double_bush in Config.scene[Config.current_level]["bushs"]["double"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_bush_double, double_bush))
+        for triple_bush in Config.scene[Config.current_level]["bushs"]["triple"]:
+            self.__transparentSceneItems.add(SceneItem(self, Config.scene_bush_triple, triple_bush))
+
+        # Castle
+        self.__transparentSceneItems.add(SceneItem(self, Config.scene_castle, Config.scene[Config.current_level]["castle"]))
+
+        # Final Flag
+        self.__sceneItems.add(SceneItem(self, Config.scene_final_flag, Config.scene[Config.current_level]["finalFlag"]))
+
+        # Main floor
+        i = 0
+        for floorHole in Config.scene[Config.current_level]["floorHoles"]:
+            for j in range(floorHole[0]):
+                self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
+                self.__sceneItems.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
+                i += 1
+            i += floorHole[1]
+
+        # Pipes
+        for pipe in Config.scene[Config.current_level]["pipes"]["vertical"]:
+            self.__sceneItems.add(SceneItem(self, Config.scene_pipe_vertical_end, (pipe[0] * 16 + 17, Config.screen_size[1] - 32 - 16 * pipe[1] - 17)))
+            for i in range(pipe[1]):
+                self.__sceneItems.add(SceneItem(self, Config.scene_pipe_vertical_extension, (pipe[0] * 16 + 17, Config.screen_size[1] - 16 * i - 32 - 8)))
+
+        # Block structures
+        for block in Config.scene[Config.current_level]["blockStructures"]:
+            for i in range(block[2]):
+                for j in range(block[1]):
+                    if block[3]:
+                        self.__sceneItems.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + (j + i) * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+                    else:
+                        self.__sceneItems.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + j * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+
+                    if j + i >= (block[1] - 1):
+                        break
+
+        # Upper floors
+        for bricksObject in Config.scene[Config.current_level]["bricks"]:
+            for i in range(bricksObject[1]):
+                self.__sceneItems.add(SceneItem(self, Config.scene_bricks, (bricksObject[0] * 16 + 8 + i * 16, Config.screen_size[1] - 32 - 16 * bricksObject[2] - 8)))
+
+
+            # self.__sceneItems.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 17, Config.screen_size[1] - 32 - 16 * block[1] - 17)))
+            # for i in range(block[1]):
+            #     self.__sceneItems.add(SceneItem(self, Config.scene_block_vertical_extension, (block[0] * 16 + 17, Config.screen_size[1] - 16 * i - 32 - 8)))
+
+        self.__players.add(Hero(self))
         # self.__parallax = Parallax()
         # self.__parallax.add_background(Config.jungle_name, 0, Config.jungle_speed)
         # self.__parallax.add_background(Config.clouds_name, 1, Config.clouds_speed)
@@ -70,9 +114,9 @@ class World:
             game_object.handle_input(key, is_pressed)
 
     def update(self, delta_time):
-        self.__players.update(delta_time)
-        self.__sceneItems.update(delta_time)
         self.__transparentSceneItems.update(delta_time)
+        self.__sceneItems.update(delta_time)
+        self.__players.update(delta_time)
         # self.__enemies.update(delta_time)
         # self.__allied_bullets.update(delta_time)
         # self.__enemy_bullets.update(delta_time)
@@ -93,8 +137,8 @@ class World:
 
     def render(self, surface):
         # self.__parallax.render(surface)
-        self.__sceneItems.draw(surface)
         self.__transparentSceneItems.draw(surface)
+        self.__sceneItems.draw(surface)
         self.__players.draw(surface)
         # self.__enemies.draw(surface)
         # self.__allied_bullets.draw(surface)
@@ -103,9 +147,9 @@ class World:
         # self.__spawner.render(surface)
 
     def quit(self):
-        self.__players.empty()
-        self.__sceneItems.empty()
         self.__transparentSceneItems.empty()
+        self.__sceneItems.empty()
+        self.__players.empty()
         # self.__enemies.empty()
         # self.__allied_bullets.empty()
         # self.__enemy_bullets.empty()

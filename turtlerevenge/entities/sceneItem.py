@@ -11,6 +11,7 @@ class SceneItem(GameObject):
 
         self.image, self.clip = AssetManager.instance().get(AssetType.SpriteSheet, type, sheet_name = Config.mario_spritesheet_name)
 
+        self.coordinates = coordinates
         self.position = pygame.math.Vector2(coordinates)
         self.rect = self.clip.copy()
         self.rect.inflate_ip(self.rect.width * -0.60, self.rect.height * -0.2)
@@ -25,15 +26,17 @@ class SceneItem(GameObject):
         pass
 
     def update(self, delta):
-        pass
+        if self.position != pygame.math.Vector2(self.coordinates[0] - (self.__world.screenCenterX - Config.screen_size[0] / 2), self.coordinates[1]):
+            self.position = pygame.math.Vector2(self.coordinates[0] - (self.__world.screenCenterX - Config.screen_size[0] / 2), self.coordinates[1])
+            self._center()
 
     def render(self, surface):
-        # No pintar si la position está fuera del sceneCenterPosition +- Config.screen_size * 0.6
-        surface.blit(self.image, self.render_rect, self.clip)
+        if self.position.x >= 0 or self.position.x <= Config.screen_size[0]:
+            surface.blit(self.image, self.render_rect, self.clip)
 
-        if Config.debug:
-            pygame.draw.rect(surface, Config.debug_collider_color, self.rect, 1)
-            pygame.draw.rect(surface, Config.debug_render_color, self.render_rect, 1)
+            if Config.debug:
+                pygame.draw.rect(surface, Config.debug_collider_color, self.rect, 1)
+                pygame.draw.rect(surface, Config.debug_render_color, self.render_rect, 1)
 
     def release(self):
         pass

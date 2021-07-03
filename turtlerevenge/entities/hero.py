@@ -3,7 +3,6 @@ import pygame
 from turtlerevenge.config import Config
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
 from turtlerevenge.entities.gameobject import GameObject
-from turtlerevenge.entities.projectile import ProjectileType
 
 class Hero(GameObject):
 
@@ -45,8 +44,6 @@ class Hero(GameObject):
         elif key == pygame.K_SPACE:
             self.__is_attacking = is_pressed
             # TODO: Play sound
-            if self.__cool_down_time <= 0.0:
-                self.__fire_bullet()
 
     def update(self, delta):
         movement = pygame.math.Vector2(0.0, 0.0)
@@ -108,22 +105,20 @@ class Hero(GameObject):
     def release(self):
         pass
 
-    def __fire_bullet(self):
-        # TODO: Lanzar ataque con arma de mano.
-        # self.__world.spawn_bullet(ProjectileType.AlliedBullet, self.render_rect.midtop, pygame.math.Vector2(Config.allied_bullet_velocity))
-        self.__cool_down_time = Config.turtle_fire_cooldown
-
     def check_bounds(self):
-        # TODO: Cuando llegue al centro de la pantalla que no avance sino que avance el background. Excepción: cuando llegue al final del background.
-        if self.position.x < 0:
-            self.position.x = 0
-        elif self.position.x > Config.screen_size[0]:
-            self.position.x = Config.screen_size[0]
+        if self.position.x < Config.turtle_initial_position[0]:
+            # TODO: Si llega al final de la pantalla lanzar siguiente fase o fin de partida
+            self.__world.screenCenterX = max(Config.screen_size[0] / 2, self.__world.screenCenterX - (Config.turtle_initial_position[0] - self.position.x))
+            self.position.x = Config.turtle_initial_position[0]
+        elif self.position.x > Config.screen_size[0] / 2:
+            self.__world.screenCenterX = min(3270, self.__world.screenCenterX + (self.position.x - Config.screen_size[0] / 2))
+            self.position.x = Config.screen_size[0] / 2
 
         if self.position.y > Config.screen_size[1]:
+            # TODO: Game Over - Cayó por agujero
             self.position.y = Config.screen_size[1]
-        elif self.position.y < Config.screen_size[1] - (Config.screen_size[1] / 2):
-            self.position.y = Config.screen_size[1] / 2
+        elif self.position.y > Config.screen_size[1]:
+            self.position.y = Config.screen_size[1]
 
         return
 

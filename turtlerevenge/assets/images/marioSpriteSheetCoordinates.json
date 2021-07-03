@@ -1,8 +1,17 @@
 {
-    "floor": [373,124,16,16],
+    "floor": [373, 124, 16, 16],
     "cloud_single": [160, 196, 35, 27],
     "cloud_double": [45, 196, 50, 27],
     "cloud_triple": [94, 196, 68, 27],
     "mountain_small": [46, 174, 52, 22],
-    "mountain_big": [96, 158, 85, 38]
+    "mountain_big": [96, 158, 85, 38],
+    "bush_single": [50, 251, 34, 18],
+    "bush_double": [150, 251, 50, 18],
+    "bush_triple": [83, 251, 68, 18],
+    "castle": [270, 218, 83, 80],
+    "pipe_vertical_end": [613, 45, 34, 33],
+    "pipe_vertical_extension": [615, 82, 30, 16],
+    "block": [372, 143, 16, 15],
+    "final_flag": [284, 45, 24, 169],
+    "bricks": [373, 102, 16, 16]
 }

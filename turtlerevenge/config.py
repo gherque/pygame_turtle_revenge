@@ -58,10 +58,18 @@ class Config:
     scene_cloud_triple = "cloud_triple"
     scene_mountain_small = "mountain_small"
     scene_mountain_big = "mountain_big"
+    scene_bush_single = "bush_single"
+    scene_bush_double = "bush_double"
+    scene_bush_triple = "bush_triple"
+    scene_castle = "castle"
+    scene_pipe_vertical_end = "pipe_vertical_end"
+    scene_pipe_vertical_extension = "pipe_vertical_extension"
+    scene_block = "block"
+    scene_final_flag = "final_flag"
+    scene_bricks = "bricks"
 
     # Hero config
     turtle_speed = 0.15
-    turtle_fire_cooldown = 300
     turtle_max_jumping_height = 100.0
     turtle_initial_position = (15, screen_size[1] - 48 - 32 + 24)
 
@@ -69,7 +77,7 @@ class Config:
     scene = [
         # Level 0
         {
-            "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole without corner, number of pieces of hole)
+            "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
                 (70, 2),
                 (15, 3),
                 (64, 2),
@@ -105,12 +113,71 @@ class Config:
             },
             "mountains": {
                 "small": [ # Array of coordinates
-                    (16 * 16 + 26, screen_size[1] - 16 * 2 - 10)
+                    (16 * 16 + 26, screen_size[1] - 16 * 2 - 10),
+                    (64 * 16 + 26, screen_size[1] - 16 * 2 - 10),
+                    (112 * 16 + 26, screen_size[1] - 16 * 2 - 10),
+                    (160 * 16 + 26, screen_size[1] - 16 * 2 - 10),
+                    (208 * 16 + 26, screen_size[1] - 16 * 2 - 10),
                 ],
                 "big": [ # Array of coordinates
-                    (0 * 16 + 43, screen_size[1] - 16 * 2 - 18)
+                    (0 * 16 + 43, screen_size[1] - 16 * 2 - 18),
+                    (48 * 16 + 43, screen_size[1] - 16 * 2 - 18),
+                    (96 * 16 + 43, screen_size[1] - 16 * 2 - 18),
+                    (144 * 16 + 43, screen_size[1] - 16 * 2 - 18),
+                    (192 * 16 + 43, screen_size[1] - 16 * 2 - 18)
                 ]
-            }
+            },
+            "bushs": {
+                "single": [ # Array of coordinates
+                    (24 * 16 + 17, screen_size[1] - 16 * 2 - 9),
+                    (72 * 16 + 17, screen_size[1] - 16 * 2 - 9),
+                    (120 * 16 + 17, screen_size[1] - 16 * 2 - 9),
+                    (168 * 16 + 17, screen_size[1] - 16 * 2 - 9),
+                    (216 * 16 + 17, screen_size[1] - 16 * 2 - 9)
+                ],
+                "double": [ # Array of coordinates
+                    (42 * 16 + 25, screen_size[1] - 16 * 2 - 9),
+                    (90 * 16 + 25, screen_size[1] - 16 * 2 - 9),
+                    (138 * 16 + 25, screen_size[1] - 16 * 2 - 9)
+                ],
+                "triple": [ # Array of coordinates
+                    (12 * 16 + 34, screen_size[1] - 16 * 2 - 9),
+                    (60 * 16 + 34, screen_size[1] - 16 * 2 - 9),
+                    (108 * 16 + 34, screen_size[1] - 16 * 2 - 9)
+                ]
+            },
+            "castle": (202 * 16 + 42, screen_size[1] - 16 * 2 - 40),
+            "pipes": {
+                "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
+                    (28, 0),
+                    (38, 1),
+                    (46, 2),
+                    (58, 2),
+                    (164, 0),
+                    (179, 0)
+                ]
+            },
+            "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
+                (134, 4, 4, True),
+                (140, 4, 4, False),
+                (149, 5, 4, True),
+                (156, 4, 4, False),
+                (181, 9, 8, True)
+            ],
+            "finalFlag": (198 * 16 + 12, screen_size[1] - 16 * 2 - 85),
+            "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+                (20, 5, 4),
+                (77, 3, 4),
+                (80, 8, 8),
+                (91, 4, 8),
+                (94, 1, 4),
+                (99, 2, 4),
+                (118, 1, 4),
+                (121, 3, 8),
+                (128, 4, 8),
+                (129, 2, 4),
+                (168, 4, 4)
+            ]
         }
     ]
 

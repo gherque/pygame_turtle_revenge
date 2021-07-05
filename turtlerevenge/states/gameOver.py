@@ -31,6 +31,8 @@ class GameOver(State):
         self.__label1 = UILabel((center_x_position, 100), font_huge, "Turtle Revenge", Config.color_green)
         self.__label2 = UILabel((center_x_position, 225), font_massive, "GAME OVER", Config.color_red)
         self.__label3 = UILabel((center_x_position, 290), font_small, "Maybe next time", Config.color_green)
+        # TODO: Poner puntuación conseguida y quizás enviar a un ranking
+
         self.__button = UILabelClickable((center_x_position, 350), font_small, "Click To Return Intro", Config.color_red, Config.color_white, action = Actions.Intro)
 
     def enter(self):

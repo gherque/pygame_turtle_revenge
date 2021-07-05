@@ -8,6 +8,9 @@ class Config:
     background_color = (0, 0, 0)
     gaming_background_color = (0, 138, 197)
     current_level = 0
+    collision_tolerance = 10
+    game_over_time = 1000
+    end_game_time = 1000
 
     # Font info
     font_filename = ["turtlerevenge", "assets", "fonts", "Turtles.ttf"]
@@ -67,11 +70,13 @@ class Config:
     scene_block = "block"
     scene_final_flag = "final_flag"
     scene_bricks = "bricks"
+    scene_addon1 = "addon1"
+    scene_addon1_disable = "addon1_disable"
 
     # Hero config
-    turtle_speed = 0.15
+    turtle_speed = 0.1
     turtle_max_jumping_height = 100.0
-    turtle_initial_position = (15, screen_size[1] - 48 - 32 + 24)
+    turtle_initial_position = (15, screen_size[1] - 32 - 23)
 
     # Scene
     scene = [
@@ -177,6 +182,22 @@ class Config:
                 (128, 4, 8),
                 (129, 2, 4),
                 (168, 4, 4)
+            ],
+            "addons": [ # Array of objects with syntax (number of floor pieces before bricks, height in number of pieces upper floor)
+                (16, 4),
+                (21, 4),
+                (22, 8),
+                (23, 4),
+                (78, 4),
+                (94, 8),
+                (94, 4),
+                (105, 4),
+                (108, 8),
+                (108, 4),
+                (111, 4),
+                (129, 8),
+                (130, 8),
+                (170, 4)
             ]
         }
     ]
@@ -244,9 +265,6 @@ class Config:
     #                         (screen_size[0]/2, screen_size[1] + 100),
     #                         (screen_size[0] - 100 , screen_size[1] + 100),
     #                         (screen_size[0] + 100, screen_size[1])]
-
-    game_over_time = 5000
-    end_game_time = 1000
 
     def __init__(self):
         pass

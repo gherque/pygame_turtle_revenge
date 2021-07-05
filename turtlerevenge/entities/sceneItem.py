@@ -14,7 +14,7 @@ class SceneItem(GameObject):
         self.coordinates = coordinates
         self.position = pygame.math.Vector2(coordinates)
         self.rect = self.clip.copy()
-        self.rect.inflate_ip(self.rect.width * -0.60, self.rect.height * -0.2)
+        # self.rect.inflate_ip(self.rect.width, self.rect.height)
 
         self.render_rect = self.clip.copy()
 

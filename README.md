@@ -22,3 +22,4 @@
 **Tool to download soundcloud music:** https://sclouddownloader.net/download-sound-track
 **Markdown guide:** https://www.markdownguide.org/basic-syntax/
 **SpriteSheet get position:** https://w3samples.com/Sprite-Get-Position
+**Photopea:** https://www.photopea.com/

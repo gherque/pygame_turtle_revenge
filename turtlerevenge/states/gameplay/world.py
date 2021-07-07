@@ -1,11 +1,13 @@
 import pygame
 
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
+from turtlerevenge.assets.sound_manager import SoundManager
 from turtlerevenge.entities.rendergroup import RenderGroup
 from turtlerevenge.entities.hero import Hero
 # from turtlerevenge.entities.enemies.enemy import Enemy
+from turtlerevenge.entities.pizzaSlice import PizzaSlice
 from turtlerevenge.entities.sceneItem import SceneItem
-from turtlerevenge.assets.sound_manager import SoundManager
+from turtlerevenge.ui.label import UILabel
 # from turtlerevenge.states.gameplay.spawner import Spawner
 from turtlerevenge.config import Config
 from turtlerevenge.states.gameplay.events import game_over_event, end_game_event
@@ -14,23 +16,27 @@ class World:
 
     def __init__(self):
         self.screenCenterX = Config.screen_size[0] / 2
-        self.playerGroup = RenderGroup()
-        self.sceneItemGroup = RenderGroup()
+        self.__playerGroup = RenderGroup()
+        self.__sceneItemGroup = RenderGroup()
         self.__transparentSceneItems = RenderGroup()
-        self.addonGroup = RenderGroup()
+        self.__addonGroup = RenderGroup()
+        self.__pizzaSliceGroup = RenderGroup()
+        # self.fallGroup = RenderGroup()
         # self.__enemies = RenderGroup()
 
+        self.__pizzaSlices = 0
+        self.__score = 0
+        self.__finishTime = 120
+        self.__remainingLifes = 1
+
     def init(self):
-        # TODO: Pintar monedas
-        # TODO: Colisiones con monedas
         # TODO: Pintar enemigos (setas, plantas carnívoras, luigis, marios)
         # TODO: Colisiones con enemigos (si es por arriba o atacando hacia el lado del enemigo -> ganar, si no morir)
         # TODO: Pintar amigos (tortugas, tortugas con pinchos)
         # TODO: Colisiones con amigos --> saludo pero con retardo por si vienen varios seguidos no quedarse hablando todo el rato
-        # TODO: Colisiones con escenario: revisar colisiones para no dejar mover o quedarse en niveles superiores y detectar NO colisiones para bajar de nivel o salir del escenario (morir)
-        # TODO: Colisiones con addons: lo mismo con escenario con el añadido que si le das por debajo te va dando premio(max 8 y se desactiva). Pintar desactivado cuando ya se ha llegado al max
 
         AssetManager.instance().load(AssetType.SpriteSheet, Config.mario_spritesheet_name, Config.mario_spritesheet_filename, data_filename = Config.mario_spritesheet_coordinates_filename)
+        AssetManager.instance().load(AssetType.Font, Config.font_name_medium, Config.font_filename, font_size = Config.font_size_medium)
 
         # Clouds
         for single_cloud in Config.scene[Config.current_level]["clouds"]["single"]:
@@ -58,31 +64,31 @@ class World:
         self.__transparentSceneItems.add(SceneItem(self, Config.scene_castle, Config.scene[Config.current_level]["castle"]))
 
         # Final Flag
-        self.sceneItemGroup.add(SceneItem(self, Config.scene_final_flag, Config.scene[Config.current_level]["finalFlag"]))
+        self.__sceneItemGroup.add(SceneItem(self, Config.scene_final_flag, Config.scene[Config.current_level]["finalFlag"]))
 
         # Main floor
         i = 0
         for floorHole in Config.scene[Config.current_level]["floorHoles"]:
             for j in range(floorHole[0]):
-                self.sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
-                self.sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
+                self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
+                self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
                 i += 1
             i += floorHole[1]
 
         # Pipes
         for pipe in Config.scene[Config.current_level]["pipes"]["vertical"]:
-            self.sceneItemGroup.add(SceneItem(self, Config.scene_pipe_vertical_end, (pipe[0] * 16 + 17, Config.screen_size[1] - 32 - 16 * pipe[1] - 17)))
+            self.__sceneItemGroup.add(SceneItem(self, Config.scene_pipe_vertical_end, (pipe[0] * 16 + 17, Config.screen_size[1] - 32 - 16 * pipe[1] - 17)))
             for i in range(pipe[1]):
-                self.sceneItemGroup.add(SceneItem(self, Config.scene_pipe_vertical_extension, (pipe[0] * 16 + 17, Config.screen_size[1] - 16 * i - 32 - 8)))
+                self.__sceneItemGroup.add(SceneItem(self, Config.scene_pipe_vertical_extension, (pipe[0] * 16 + 17, Config.screen_size[1] - 16 * i - 32 - 8)))
 
         # Block structures
         for block in Config.scene[Config.current_level]["blockStructures"]:
             for i in range(block[2]):
                 for j in range(block[1]):
                     if block[3]:
-                        self.sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + (j + i) * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + (j + i) * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
                     else:
-                        self.sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + j * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + j * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
 
                     if j + i >= (block[1] - 1):
                         break
@@ -90,50 +96,85 @@ class World:
         # Upper floors
         for bricksObject in Config.scene[Config.current_level]["bricks"]:
             for i in range(bricksObject[1]):
-                self.sceneItemGroup.add(SceneItem(self, Config.scene_bricks, (bricksObject[0] * 16 + 8 + i * 16, Config.screen_size[1] - 32 - 16 * bricksObject[2] - 8)))
+                self.__sceneItemGroup.add(SceneItem(self, Config.scene_bricks, (bricksObject[0] * 16 + 8 + i * 16, Config.screen_size[1] - 32 - 16 * bricksObject[2] - 8)))
 
         # Addons
         for addon in Config.scene[Config.current_level]["addons"]:
-            self.addonGroup.add(SceneItem(self, Config.scene_addon1, (addon[0] * 16 + 8, Config.screen_size[1] - 32 - 16 * addon[1] - 8)))
+            self.__addonGroup.add(SceneItem(self, Config.scene_addon1, (addon[0] * 16 + 8, Config.screen_size[1] - 32 - 16 * addon[1] - 8)))
 
-        self.playerGroup.add(Hero(self))
+        # Pizza slices
+        for pizzaSlice in Config.scene[Config.current_level]["pizzaSlices"]:
+            self.__pizzaSliceGroup.add(PizzaSlice(self, (pizzaSlice[0] + 13, pizzaSlice[1] - 15)))
+
+        self.__playerGroup.add(Hero(self))
 
         # self.__spawner = Spawner(self)
         AssetManager.instance().load(AssetType.Music, Config.sound_action_name, Config.sound_action_filename)
         SoundManager.instance().play_music(Config.sound_action_name)
 
+        self.__set_score_surface()
+
     def handle_input(self, key, is_pressed):
-        for game_object in self.playerGroup:
+        for game_object in self.__playerGroup:
             game_object.handle_input(key, is_pressed)
 
     def update(self, delta_time):
         self.__transparentSceneItems.update(delta_time)
-        self.sceneItemGroup.update(delta_time)
-        self.addonGroup.update(delta_time)
-        self.playerGroup.update(delta_time)
+        self.__sceneItemGroup.update(delta_time)
+        self.__addonGroup.update(delta_time)
+        self.__pizzaSliceGroup.update(delta_time)
+        self.__playerGroup.update(delta_time)
         # self.__enemies.update(delta_time)
         # self.__spawner.update(delta_time)
+
+        # Player/sceneItems collisions
+        for sceneItem in pygame.sprite.groupcollide(self.__sceneItemGroup, self.__playerGroup, False, False).keys():
+            self.__playerGroup.sprites()[0].check_collision_type(sceneItem, 'sceneItem')
+
+        # Player/addons collisions
+        for addon in pygame.sprite.groupcollide(self.__addonGroup, self.__playerGroup, False, False).keys():
+            self.__playerGroup.sprites()[0].check_collision_type(addon, 'addon')
+
+        # Player/pizzaSlices collisions
+        for pizzaSlice in pygame.sprite.groupcollide(self.__pizzaSliceGroup, self.__playerGroup, True, False).keys():
+            self.__pizzaSlices += 1
+            # TODO: Play sfx Sound
 
         # for enemy in pygame.sprite.groupcollide(self.__enemies, self.__allied_bullets, True, True).keys():
         #     self.spawn_explosion(enemy.body.status.position.xy, False)
 
-        # for player in pygame.sprite.groupcollide(self.playerGroup, self.__enemies, True, True).keys():
+        # for player in pygame.sprite.groupcollide(self.__playerGroup, self.__enemies, True, True).keys():
         #     self.spawn_explosion(player.position.xy, True)
         #     self.game_over()
 
+        self.__set_score_surface()
+
     def render(self, surface):
         self.__transparentSceneItems.draw(surface)
-        self.sceneItemGroup.draw(surface)
-        self.addonGroup.draw(surface)
-        self.playerGroup.draw(surface)
+        self.__sceneItemGroup.draw(surface)
+        self.__addonGroup.draw(surface)
+        self.__pizzaSliceGroup.draw(surface)
+        self.__playerGroup.draw(surface)
         # self.__enemies.draw(surface)
         # self.__spawner.render(surface)
 
+        self.__label1.render(surface)
+        self.__label2.render(surface)
+        self.__label3.render(surface)
+        self.__label4.render(surface)
+        self.__label5.render(surface)
+        self.__label6.render(surface)
+        self.__label7.render(surface)
+        self.__label8.render(surface)
+        self.__label9.render(surface)
+        self.__label10.render(surface)
+
     def quit(self):
         self.__transparentSceneItems.empty()
-        self.sceneItemGroup.empty()
-        self.addonGroup.empty()
-        self.playerGroup.empty()
+        self.__sceneItemGroup.empty()
+        self.__addonGroup.empty()
+        self.__pizzaSliceGroup.empty()
+        self.__playerGroup.empty()
         # self.__enemies.empty()
         # self.__spawner = None
 
@@ -149,7 +190,24 @@ class World:
         SoundManager.instance().stop_music(Config.end_game_time)
 
     def get_hero_pos(self):
-        if len(self.playerGroup) > 0:
-            return self.playerGroup.sprites()[0].get_pos()
+        if len(self.__playerGroup) > 0:
+            return self.__playerGroup.sprites()[0].get_pos()
         else:
             return pygame.math.Vector2(0.0, 0.0)
+
+    def get_score_xposition(self, order, total):
+        return Config.screen_size[0] / total * order - Config.screen_size[0] / total / 2
+
+    def __set_score_surface(self):
+        font = AssetManager.instance().get(AssetType.Font, Config.font_name_medium)
+
+        self.__label1 = UILabel((self.get_score_xposition(5, 5), 25), font, "Lifes", Config.color_white)
+        self.__label2 = UILabel((self.get_score_xposition(5, 5), 50), font, str(self.__remainingLifes), Config.color_white)
+        self.__label3 = UILabel((self.get_score_xposition(1, 5), 25), font, "Score", Config.color_white)
+        self.__label4 = UILabel((self.get_score_xposition(1, 5), 50), font, str(self.__score), Config.color_white)
+        self.__label5 = UILabel((self.get_score_xposition(2, 5), 25), font, "Pizza Slices", Config.color_white)
+        self.__label6 = UILabel((self.get_score_xposition(2, 5), 50), font, str(self.__pizzaSlices), Config.color_white)
+        self.__label7 = UILabel((self.get_score_xposition(3, 5), 25), font, "Level", Config.color_white)
+        self.__label8 = UILabel((self.get_score_xposition(3, 5), 50), font, str(Config.current_level + 1), Config.color_white)
+        self.__label9 = UILabel((self.get_score_xposition(4, 5), 25), font, "Time", Config.color_white)
+        self.__label10 = UILabel((self.get_score_xposition(4, 5), 50), font, str(self.__finishTime), Config.color_white)

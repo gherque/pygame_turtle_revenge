@@ -14,10 +14,12 @@ class Config:
 
     # Font info
     font_filename = ["turtlerevenge", "assets", "fonts", "Turtles.ttf"]
-    font_name_huge = "font_turtlesTitles"
-    font_name_massive = "font_gameover"
-    font_name_small = "font_turtles"
+    font_name_small = "font_name_small"
+    font_name_medium = "font_name_medium"
+    font_name_huge = "font_name_huge"
+    font_name_massive = "font_name_massive"
     font_size_small = 12
+    font_size_medium = 20
     font_size_huge = 50
     font_size_massive = 75
     # sizes: mini, tiny, small, medium, large, big, huge, massive
@@ -47,6 +49,9 @@ class Config:
     mario_spritesheet_name = "marioSpriteSheet"
     mario_spritesheet_filename = ["turtlerevenge", "assets", "images", "marioSpriteSheet.gif"]
     mario_spritesheet_coordinates_filename = ["turtlerevenge", "assets", "images", "marioSpriteSheetCoordinates.json"]
+    pizza_spritesheet_name = "pizzaSpriteSheet"
+    pizza_spritesheet_filename = ["turtlerevenge", "assets", "images", "pizzaSpriteSheet.png"]
+    pizza_spritesheet_coordinates_filename = ["turtlerevenge", "assets", "images", "pizzaSpriteSheetCoordinates.json"]
 
     # SpriteSheets item names
     turtle_walk = ["walk1", "walk2", "walk3", "walk4"]
@@ -72,11 +77,13 @@ class Config:
     scene_bricks = "bricks"
     scene_addon1 = "addon1"
     scene_addon1_disable = "addon1_disable"
+    pizza_spinning = ["pizza1", "pizza2", "pizza3", "pizza4", "pizza5", "pizza6"]
 
-    # Hero config
+    # Entities config
     turtle_speed = 0.1
     turtle_max_jumping_height = 100.0
-    turtle_initial_position = (15, screen_size[1] - 32 - 23)
+    turtle_initial_position = (15, screen_size[1] - 32 - 24)
+    pizza_speed = 0.075
 
     # Scene
     scene = [
@@ -198,6 +205,11 @@ class Config:
                 (129, 8),
                 (130, 8),
                 (170, 4)
+            ],
+            "pizzaSlices": [ # Array of coordinates
+                (1000, screen_size[1] - 150),
+                (1025, screen_size[1] - 175),
+                (1050, screen_size[1] - 150)
             ]
         }
     ]

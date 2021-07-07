@@ -93,14 +93,14 @@ class Hero(GameObject):
                 elif abs(item.rect.bottom - self.rect.top) < Config.collision_tolerance and self.__is_moving_up:
                     self.__is_moving_down = True
                 elif abs(item.rect.right - self.rect.left) < Config.collision_tolerance and self.__is_moving_left and abs(item.rect.top - self.rect.bottom) > 2 and not self.__is_moving_down and not self.__is_moving_up:
-                    print('choco por la...', abs(item.rect.top - self.rect.bottom))
-                #     print('¿hacia la izquierda?')
-                # if abs(item.rect.top - self.rect.bottom) < Config.collision_tolerance:
-                #     print('¿hacia la derecha?')
+                    self.position.x = item.position.x + item.rect[2] / 2 + self.rect[2] / 2
+                    self._center()
+                elif abs(item.rect.left - self.rect.right) < Config.collision_tolerance and self.__is_moving_right and abs(item.rect.top - self.rect.bottom) > 2 and not self.__is_moving_down and not self.__is_moving_up:
+                    self.position.x = item.position.x - item.rect[2] / 2 - self.rect[2] / 2
+                    self._center()
 
         # Player/addons collisions
         for addon in self.__world.addonGroup:
-
             if self.rect.colliderect(addon):
                 if abs(addon.rect.top - self.rect.bottom) < Config.collision_tolerance and self.__is_moving_down:
                     self.__is_moving_down = False

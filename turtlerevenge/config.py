@@ -81,7 +81,7 @@ class Config:
 
     # Entities config
     turtle_speed = 0.1
-    turtle_max_jumping_height = 100.0
+    turtle_max_jumping_height = 80.0
     turtle_initial_position = (15, screen_size[1] - 32 - 24)
     pizza_speed = 0.075
 
@@ -190,7 +190,7 @@ class Config:
                 (129, 2, 4),
                 (168, 4, 4)
             ],
-            "addons": [ # Array of objects with syntax (number of floor pieces before bricks, height in number of pieces upper floor)
+            "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
                 (16, 4),
                 (21, 4),
                 (22, 8),
@@ -210,6 +210,14 @@ class Config:
                 (1000, screen_size[1] - 150),
                 (1025, screen_size[1] - 175),
                 (1050, screen_size[1] - 150)
+            ],
+            "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
+                (16, 4),
+                (22, 8),
+                (105, 4),
+                (108, 8),
+                (108, 4),
+                (111, 4)
             ]
         }
     ]

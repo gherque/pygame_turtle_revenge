@@ -5,6 +5,7 @@ from turtlerevenge.assets.sound_manager import SoundManager
 from turtlerevenge.entities.rendergroup import RenderGroup
 from turtlerevenge.entities.hero import Hero
 # from turtlerevenge.entities.enemies.enemy import Enemy
+from turtlerevenge.entities.fall import Fall
 from turtlerevenge.entities.pizzaSlice import PizzaSlice
 from turtlerevenge.entities.sceneItem import SceneItem
 from turtlerevenge.ui.label import UILabel
@@ -21,7 +22,7 @@ class World:
         self.__transparentSceneItems = RenderGroup()
         self.__addonGroup = RenderGroup()
         self.__pizzaSliceGroup = RenderGroup()
-        # self.fallGroup = RenderGroup()
+        self.__fallGroup = RenderGroup()
         # self.__enemies = RenderGroup()
 
         self.__pizzaSlices = 0
@@ -73,11 +74,16 @@ class World:
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
                 i += 1
-            i += floorHole[1]
+            for z in range(floorHole[1] - 1):
+                self.__fallGroup.add(Fall(self, ((i + 1) * 16, Config.screen_size[1] - 32)))
+                i += 1
+            i += 1
 
         # Pipes
         for pipe in Config.scene[Config.current_level]["pipes"]["vertical"]:
+            self.__fallGroup.add(Fall(self, (pipe[0] * 16 - 24, Config.screen_size[1] - 32 - 16 * pipe[1] - 60)))
             self.__sceneItemGroup.add(SceneItem(self, Config.scene_pipe_vertical_end, (pipe[0] * 16 + 17, Config.screen_size[1] - 32 - 16 * pipe[1] - 17)))
+            self.__fallGroup.add(Fall(self, (pipe[0] * 16 + 56, Config.screen_size[1] - 32 - 16 * pipe[1] - 60)))
             for i in range(pipe[1]):
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_pipe_vertical_extension, (pipe[0] * 16 + 17, Config.screen_size[1] - 16 * i - 32 - 8)))
 
@@ -86,9 +92,17 @@ class World:
             for i in range(block[2]):
                 for j in range(block[1]):
                     if block[3]:
+                        if j == 0:
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i) * 16 - 24, Config.screen_size[1] - 32 - i * 16 - 16 * 4)))
                         self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + (j + i) * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        if i == (block[2] - 1) and j + i == (block[1] - 1):
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i + 1) * 16 + 8, Config.screen_size[1] - 32 - i * 16 - 16 * 4)))
                     else:
+                        if i == (block[2] - 1) and j == 0:
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 - 24, Config.screen_size[1] - 32 - i * 16 - 16 * 4)))
                         self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + j * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        if j + i == (block[1] - 1):
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 + 24, Config.screen_size[1] - 32 - i * 16 - 16 * 4)))
 
                     if j + i >= (block[1] - 1):
                         break
@@ -96,11 +110,20 @@ class World:
         # Upper floors
         for bricksObject in Config.scene[Config.current_level]["bricks"]:
             for i in range(bricksObject[1]):
+                if i == 0:
+                    self.__fallGroup.add(Fall(self, (bricksObject[0] * 16 + 8 + i * 16 - 20, Config.screen_size[1] - 32 - bricksObject[2] * 16 - 16 * 4)))
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_bricks, (bricksObject[0] * 16 + 8 + i * 16, Config.screen_size[1] - 32 - 16 * bricksObject[2] - 8)))
+                if i == (bricksObject[1] - 1):
+                    self.__fallGroup.add(Fall(self, (bricksObject[0] * 16 + 8 + i * 16 + 24, Config.screen_size[1] - 32 - bricksObject[2] * 16 - 16 * 4)))
 
         # Addons
         for addon in Config.scene[Config.current_level]["addons"]:
             self.__addonGroup.add(SceneItem(self, Config.scene_addon1, (addon[0] * 16 + 8, Config.screen_size[1] - 32 - 16 * addon[1] - 8)))
+
+        # Falls
+        for fall in Config.scene[Config.current_level]["falls"]:
+            self.__fallGroup.add(Fall(self, (fall[0] * 16 - 24, Config.screen_size[1] - 32 - 16 * fall[1] - 16 * 4)))
+            self.__fallGroup.add(Fall(self, (fall[0] * 17 + 24, Config.screen_size[1] - 32 - 16 * fall[1] - 16 * 4)))
 
         # Pizza slices
         for pizzaSlice in Config.scene[Config.current_level]["pizzaSlices"]:
@@ -123,6 +146,7 @@ class World:
         self.__sceneItemGroup.update(delta_time)
         self.__addonGroup.update(delta_time)
         self.__pizzaSliceGroup.update(delta_time)
+        self.__fallGroup.update(delta_time)
         self.__playerGroup.update(delta_time)
         # self.__enemies.update(delta_time)
         # self.__spawner.update(delta_time)
@@ -140,6 +164,10 @@ class World:
             self.__pizzaSlices += 1
             # TODO: Play sfx Sound
 
+        # Player/falls collisions
+        for fall in pygame.sprite.groupcollide(self.__fallGroup, self.__playerGroup, False, False).keys():
+            self.__playerGroup.sprites()[0].fall()
+
         # for enemy in pygame.sprite.groupcollide(self.__enemies, self.__allied_bullets, True, True).keys():
         #     self.spawn_explosion(enemy.body.status.position.xy, False)
 
@@ -155,6 +183,7 @@ class World:
         self.__addonGroup.draw(surface)
         self.__pizzaSliceGroup.draw(surface)
         self.__playerGroup.draw(surface)
+        self.__fallGroup.draw(surface)
         # self.__enemies.draw(surface)
         # self.__spawner.render(surface)
 
@@ -174,6 +203,7 @@ class World:
         self.__sceneItemGroup.empty()
         self.__addonGroup.empty()
         self.__pizzaSliceGroup.empty()
+        self.__fallGroup.empty()
         self.__playerGroup.empty()
         # self.__enemies.empty()
         # self.__spawner = None
@@ -184,6 +214,7 @@ class World:
     def game_over(self):
         pygame.time.set_timer(game_over_event, Config.game_over_time, True)
         SoundManager.instance().stop_music(Config.game_over_time)
+        self.screenCenterX = Config.screen_size[0] / 2
 
     def game_end(self):
         pygame.time.set_timer(end_game_event, Config.end_game_time, True)

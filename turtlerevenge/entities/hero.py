@@ -78,7 +78,7 @@ class Hero(GameObject):
     def render(self, surface):
         turtle_name = Config.turtle_walk_reverse[int(self.__walk_index)] if self.__direction_left else Config.turtle_walk[int(self.__walk_index)]
 
-        if self.__is_moving_up or self.__is_moving_down:
+        if self.__is_moving_up:
             turtle_name = Config.turtle_jump_reverse if self.__direction_left else Config.turtle_jump
 
         if self.__is_attacking:
@@ -112,6 +112,9 @@ class Hero(GameObject):
 
     def get_pos(self):
         return self.position
+
+    def fall(self):
+        self.__is_moving_down = True if not self.__is_moving_up else self.__is_moving_down
 
     def check_collision_type(self, item, type):
         if abs(item.rect.top - self.rect.bottom) < Config.collision_tolerance and self.__is_moving_down:

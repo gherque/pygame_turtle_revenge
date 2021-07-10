@@ -35,7 +35,7 @@ class GameEnd(State):
         self.__button = UILabelClickable((center_x_position, 375), font_small, "Click To Return Intro", Config.color_red, Config.color_white, action = Actions.Intro)
 
     def enter(self):
-        SoundManager.instance().play_music(Config.sound_gameend_name)
+        SoundManager.instance().play_music(Config.sound_gameend_name, True)
         self.done = False
 
     def exit(self):

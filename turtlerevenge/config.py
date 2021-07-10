@@ -8,6 +8,7 @@ class Config:
     background_color = (0, 0, 0)
     gaming_background_color = (0, 138, 197)
     current_level = 0
+    total_levels = 3
     collision_tolerance = 10
     game_over_time = 1000
     end_game_time = 1000
@@ -78,12 +79,18 @@ class Config:
     scene_addon1 = "addon1"
     scene_addon1_disable = "addon1_disable"
     pizza_spinning = ["pizza1", "pizza2", "pizza3", "pizza4", "pizza5", "pizza6"]
+    mushroom = ["mushroom_walk1", "mushroom_walk2"]
+    mushroom_lying_down = "mushroom_lying_down"
+    turtle = ["turtle_walk1", "turtle_walk2"]
+    turtle_reverse = ["turtle_walk1_reverse", "turtle_walk2_reverse"]
 
     # Entities config
     turtle_speed = 0.1
     turtle_max_jumping_height = 80.0
     turtle_initial_position = (15, screen_size[1] - 32 - 24)
     pizza_speed = 0.075
+    foolEnemy_speed = 0.05
+    friend_speed = 0.05
 
     # Scene
     scene = [
@@ -113,14 +120,14 @@ class Config:
                     (82 * 16 + 25, 150),
                     (129 * 16 + 25, 150),
                     (176 * 16 + 25, 150),
-                    (223 * 16 + 25, 150)
+                    (219 * 16 + 25, 150)
                 ],
                 "triple": [ # Array of coordinates
                     (26 * 16 + 33, 150 + 27),
                     (73 * 16 + 33, 150 + 27),
-                    (110 * 16 + 33, 150 + 27),
-                    (147 * 16 + 33, 150 + 27),
-                    (184 * 16 + 33, 150 + 27)
+                    (120 * 16 + 33, 150 + 27),
+                    (167 * 16 + 33, 150 + 27),
+                    (210 * 16 + 33, 150 + 27)
                 ]
             },
             "mountains": {
@@ -218,9 +225,34 @@ class Config:
                 (108, 8),
                 (108, 4),
                 (111, 4)
+            ],
+            "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
+                ("mushroom", 22, 0),
+                ("mushroom", 41, 0),
+                ("mushroom", 51, 0),
+                ("mushroom", 54, 0),
+                ("mushroom", 80, 9),
+                ("mushroom", 83, 9),
+                ("mushroom", 97, 0),
+                ("mushroom", 99, 0),
+                ("mushroom", 114, 0),
+                ("mushroom", 116, 0),
+                ("mushroom", 124, 0),
+                ("mushroom", 126, 0),
+                ("mushroom", 130, 0),
+                ("mushroom", 132, 0),
+                ("mushroom", 174, 0),
+                ("mushroom", 176, 0)
+            ],
+            "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+                ("turtle", 107, 0)
             ]
         }
     ]
+
+    # Scores
+    pizza_slice_score = 100
+    mushroom_killed_score = 200
 
     # explosion_name = "explosion"
     # explosion_image_filename = ["turtlerevenge", "assets", "images", "explosion.png"]
@@ -248,21 +280,18 @@ class Config:
 
     # allied_bullet_velocity = (0.0, -0.3)
 
+    # Debug configuration
     fps = 60
     time_per_frame = 1000.0 / fps
     refresh_stats_time = 1000.0
     fps_stats_pos = (0, 2)
-
     debug = False
     debug_collider_color = (0, 255, 255)
     debug_render_color = (0, 0, 255)
-    # debug_way_point_color = (0,255,0)
 
+    # debug_way_point_color = (0,255,0)
     # waypoints_area = (screen_size[0], screen_size[1] / 2)
     # waypoints_separation = (120, 100)
-
-    # enemy_raptor_name = "raptor"
-    # enemy_avenger_name = "avenger"
 
     # enemies_spawn_probability = 0.01
     # enemies_max_waypoints = 5

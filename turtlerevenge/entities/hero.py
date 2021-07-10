@@ -42,7 +42,7 @@ class Hero(GameObject):
             self.__is_moving_right = is_pressed
         elif key == pygame.K_SPACE:
             self.__is_attacking = is_pressed
-            # TODO: Play sound
+            # TODO: Play sfx sound
 
     def update(self, delta):
         movement = pygame.math.Vector2(0.0, 0.0)
@@ -96,7 +96,6 @@ class Hero(GameObject):
 
     def check_bounds(self):
         if self.position.x < Config.turtle_initial_position[0]:
-            # TODO: Si llega al final de la pantalla lanzar siguiente fase o fin de partida
             self.__world.screenCenterX = max(Config.screen_size[0] / 2, self.__world.screenCenterX - (Config.turtle_initial_position[0] - self.position.x))
             self.position.x = Config.turtle_initial_position[0]
         elif self.position.x > Config.screen_size[0] / 2:
@@ -133,3 +132,12 @@ class Hero(GameObject):
         elif abs(item.rect.left - self.rect.right) < Config.collision_tolerance and self.__is_moving_right:
             self.position.x = item.position.x - item.rect[2] / 2 - self.rect[2] / 2
             self._center()
+
+    def player_win_enemy(self, type, enemy):
+        if type == "mushroom":
+            if ((abs(enemy.rect.top - self.rect.bottom) < Config.collision_tolerance and self.__is_moving_down) or
+                (abs(enemy.rect.right - self.rect.left) < Config.collision_tolerance and self.__direction_left and self.__is_attacking) or
+                (abs(enemy.rect.left - self.rect.right) < Config.collision_tolerance and not self.__direction_left and self.__is_attacking)):
+                return True, self.__direction_left
+            else:
+                return False, self.__direction_left

@@ -36,7 +36,7 @@ class About(State):
         self.__button = UILabelClickable((center_x_position, 400), font, "Click To Return Intro", Config.color_red, Config.color_white, action = Actions.Intro)
 
     def enter(self):
-        SoundManager.instance().play_music(Config.sound_about_name)
+        SoundManager.instance().play_music(Config.sound_about_name, False)
         self.done = False
 
     def exit(self):

@@ -31,7 +31,7 @@ class SoundManager:
         sound.set_volume(self.__sound_volume)
         sound.play()
 
-    def play_music(self, name):
+    def play_music(self, name, once):
         if name is self.__current_music:
             return
 
@@ -40,7 +40,8 @@ class SoundManager:
         pygame.mixer.music.load(music)
         pygame.mixer.music.set_volume(self.__music_volume)
         self.__current_music = name
-        pygame.mixer.music.play(-1)
+        # TODO: Check if play only once the music on game over and game end
+        pygame.mixer.music.play(-1 if not once else 0)
 
     def stop_music(self, time = 100):
         pygame.mixer.music.fadeout(time)

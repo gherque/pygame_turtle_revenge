@@ -10,7 +10,7 @@ class Fall(GameObject):
 
         self.coordinates = coordinates
         self.position = pygame.math.Vector2(coordinates)
-        self.rect = pygame.Rect(0, 0, 16, 16)
+        self.rect = pygame.Rect(0, 0, 5, 16)
 
         self.render_rect = self.rect.copy()
 

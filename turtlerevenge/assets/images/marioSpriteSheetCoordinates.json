@@ -12,8 +12,15 @@
     "pipe_vertical_end": [613, 45, 34, 33],
     "pipe_vertical_extension": [615, 82, 30, 16],
     "block": [372, 143, 16, 15],
-    "final_flag": [284, 45, 24, 169],
+    "final_flag": [284, 45, 22, 169],
     "bricks": [373, 102, 16, 16],
     "addon1": [372, 160, 16, 16],
-    "addon1_disable": [372, 179, 16, 16]
+    "addon1_disable": [372, 179, 16, 16],
+    "mushroom_walk1": [186, 892, 18, 18],
+    "mushroom_walk2": [207, 892, 18, 18],
+    "mushroom_lying_down": [227, 892, 18, 18],
+    "turtle_walk1": [450, 817, 18, 24],
+    "turtle_walk2": [480, 817, 18, 24],
+    "turtle_walk1_reverse": [212, 817, 18, 24],
+    "turtle_walk2_reverse": [182, 817, 18, 24]
 }

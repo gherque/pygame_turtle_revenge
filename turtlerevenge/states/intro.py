@@ -30,7 +30,7 @@ class Intro(State):
         self.__button2 = UILabelClickable((Config.screen_size[0] / 2, 300), font, "Click To Watch Credits", Config.color_red, Config.color_white, action = Actions.About)
 
     def enter(self):
-        SoundManager.instance().play_music(Config.sound_intro_name)
+        SoundManager.instance().play_music(Config.sound_intro_name, False)
         self.done = False
 
     def exit(self):

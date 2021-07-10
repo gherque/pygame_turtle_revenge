@@ -36,7 +36,7 @@ class GameOver(State):
         self.__button = UILabelClickable((center_x_position, 350), font_small, "Click To Return Intro", Config.color_red, Config.color_white, action = Actions.Intro)
 
     def enter(self):
-        SoundManager.instance().play_music(Config.sound_gameover_name)
+        SoundManager.instance().play_music(Config.sound_gameover_name, True)
         self.done = False
 
     def exit(self):

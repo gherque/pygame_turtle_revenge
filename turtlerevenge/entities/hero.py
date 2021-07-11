@@ -7,6 +7,9 @@ from turtlerevenge.entities.gameobject import GameObject
 
 class Hero(GameObject):
 
+# TODO: sonido al saltar
+# TODO: sonido al caer sobre algo firme
+
     def __init__(self, world):
         super().__init__()
         self.__is_moving_up = False

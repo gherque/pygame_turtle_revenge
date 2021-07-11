@@ -2,12 +2,13 @@ import pygame
 
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
 from turtlerevenge.assets.sound_manager import SoundManager
-from turtlerevenge.entities.rendergroup import RenderGroup
+from turtlerevenge.entities.carnivorousPlantEnemy import CarnivorousPlantEnemy
 from turtlerevenge.entities.hero import Hero
 from turtlerevenge.entities.fall import Fall
 from turtlerevenge.entities.friend import Friend
 from turtlerevenge.entities.mushroomEnemy import MushroomEnemy
 from turtlerevenge.entities.pizzaSlice import PizzaSlice
+from turtlerevenge.entities.rendergroup import RenderGroup
 from turtlerevenge.entities.sceneItem import SceneItem
 from turtlerevenge.ui.label import UILabel
 from turtlerevenge.config import Config
@@ -24,6 +25,7 @@ class World:
         self.__pizzaSliceGroup = RenderGroup()
         self.__fallGroup = RenderGroup()
         self.__mushroomEnemyGroup = RenderGroup()
+        self.__carnivorousPlantEnemyGroup = RenderGroup()
         self.__friendGroup = RenderGroup()
 
         self.__pizzaSlices = 0
@@ -140,9 +142,11 @@ class World:
             self.__pizzaSliceGroup.add(PizzaSlice(self, (pizzaSlice[0] + 13, pizzaSlice[1] - 15)))
 
         # Enemies
-        for mushroomEnemy in Config.scene[Config.current_level]["enemies"]:
-            if mushroomEnemy[0] == "mushroom":
-                self.__mushroomEnemyGroup.add(MushroomEnemy(self, (mushroomEnemy[1] * 16 + 9, Config.screen_size[1] - 32 - mushroomEnemy[2] * 16 - 9)))
+        for enemy in Config.scene[Config.current_level]["enemies"]:
+            if enemy[0] == "mushroom" or enemy[0] == "mushroom_dark":
+                self.__mushroomEnemyGroup.add(MushroomEnemy(self, enemy[0], (enemy[1] * 16 + 9, Config.screen_size[1] - 32 - enemy[2] * 16 - 9)))
+            elif enemy[0] == "carnivorousPlant" or enemy[0] == "carnivorousPlant_dark":
+                self.__carnivorousPlantEnemyGroup.add(CarnivorousPlantEnemy(self, enemy[0], (enemy[1] * 16 + 2, Config.screen_size[1] - 32 - enemy[2] * 16 - 9)))
 
         # Friends
         for friend in Config.scene[Config.current_level]["friends"]:
@@ -168,6 +172,7 @@ class World:
         self.__pizzaSliceGroup.update(delta_time)
         self.__fallGroup.update(delta_time)
         self.__mushroomEnemyGroup.update(delta_time)
+        self.__carnivorousPlantEnemyGroup.update(delta_time)
         self.__friendGroup.update(delta_time)
         self.__playerGroup.update(delta_time)
 
@@ -217,10 +222,15 @@ class World:
         for friend in pygame.sprite.groupcollide(self.__friendGroup, self.__playerGroup, False, False).keys():
             friend.greet_hero()
 
+        # CarnivorousPlant/player collisions
+        for carnivorousPlantEnemy in pygame.sprite.groupcollide(self.__carnivorousPlantEnemyGroup, self.__playerGroup, False, False).keys():
+            self.__playerGroup.sprites()[0].remove()
+
         self.__set_score_surface()
 
     def render(self, surface):
         self.__transparentSceneItems.draw(surface)
+        self.__carnivorousPlantEnemyGroup.draw(surface)
         self.__sceneItemGroup.draw(surface)
         self.__addonGroup.draw(surface)
         self.__pizzaSliceGroup.draw(surface)
@@ -248,6 +258,7 @@ class World:
         self.__fallGroup.empty()
         self.__mushroomEnemyGroup.empty()
         self.__friendGroup.empty()
+        self.__carnivorousPlantEnemyGroup.empty()
         self.__playerGroup.empty()
 
     def game_over(self):

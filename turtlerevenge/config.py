@@ -7,7 +7,7 @@ class Config:
     game_title = "Turtle Revenge"
     background_color = (0, 0, 0)
     gaming_background_color = (0, 138, 197)
-    current_level = 3
+    current_level = 2
     total_levels = 5
     collision_tolerance = 10
     game_over_time = 1000
@@ -93,15 +93,20 @@ class Config:
     pizza_spinning = ["pizza1", "pizza2", "pizza3", "pizza4", "pizza5", "pizza6"]
     mushroom = ["mushroom_walk1", "mushroom_walk2"]
     mushroom_lying_down = "mushroom_lying_down"
+    mushroom_dark = ["mushroom_dark_walk1", "mushroom_dark_walk2"]
+    mushroom_dark_lying_down = "mushroom_dark_lying_down"
     turtle = ["turtle_walk1", "turtle_walk2"]
     turtle_reverse = ["turtle_walk1_reverse", "turtle_walk2_reverse"]
+    carnivorousPlant = ["carnivorousPlant_open", "carnivorousPlant_close"]
+    carnivorousPlant_dark = ["carnivorousPlant_dark_open", "carnivorousPlant_dark_close"]
 
     # Entities config
     turtle_speed = 0.1
     turtle_max_jumping_height = 80.0
-    turtle_initial_position = (30, screen_size[1] - 32 - 24)
+    turtle_initial_position = (40, screen_size[1] - 32 - 24)
     pizza_speed = 0.075
     foolEnemy_speed = 0.05
+    plants_speed = 0.02
     friend_speed = 0.05
 
     # Scene
@@ -508,10 +513,38 @@ class Config:
                 (14, 4),
             ],
             "pizzaSlices": [ # Array of coordinates
+                (39 * 16 + 9, screen_size[1] - 9 * 16 - 13),
+                (41 * 16 + 9, screen_size[1] - 9 * 16 - 13),
+                (43 * 16 + 9, screen_size[1] - 9 * 16 - 13),
+                (45 * 16 + 9, screen_size[1] - 9 * 16 - 13),
+                (56 * 16 + 9, screen_size[1] - 7 * 16 - 13),
+                (58 * 16 + 9, screen_size[1] - 7 * 16 - 13),
+                (67 * 16 + 9, screen_size[1] - 8 * 16 - 13),
+                (82 * 16 + 9, screen_size[1] - 10 * 16 - 13),
+                (84 * 16 + 9, screen_size[1] - 10 * 16 - 13),
+                (86 * 16 + 9, screen_size[1] - 10 * 16 - 13),
+                (88 * 16 + 9, screen_size[1] - 10 * 16 - 13)
             ],
             "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
+                (8, 5),
+                (16, 5)
             ],
             "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
+                ("mushroom_dark", 12, 0),
+                ("mushroom_dark", 14, 0),
+                ("mushroom_dark", 29, 0),
+                ("mushroom_dark", 63, 0),
+                ("mushroom_dark", 65, 0),
+                ("mushroom_dark", 72, 10),
+                ("mushroom_dark", 76, 5),
+                ("mushroom_dark", 78, 5),
+                ("mushroom_dark", 97, 0),
+                ("mushroom_dark", 99, 0),
+                ("mushroom_dark", 101, 0),
+                ("mushroom_dark", 113, 0),
+                ("carnivorousPlant_dark", 104, 3),
+                ("carnivorousPlant_dark", 110, 4),
+                ("carnivorousPlant_dark", 116, 2)
             ],
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
             ]
@@ -520,7 +553,7 @@ class Config:
         {
             "availableTime": 240.0,
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
-                (42, 0)
+                (55, 0)
             ],
             "clouds": {
                 "single": [ # Array of coordinates

@@ -21,8 +21,15 @@
     "mushroom_walk1": [186, 892, 18, 18],
     "mushroom_walk2": [207, 892, 18, 18],
     "mushroom_lying_down": [227, 892, 18, 18],
+    "mushroom_dark_walk1": [252, 892, 18, 18],
+    "mushroom_dark_walk2": [273, 892, 18, 18],
+    "mushroom_dark_lying_down": [293, 892, 18, 18],
     "turtle_walk1": [450, 817, 18, 24],
     "turtle_walk2": [480, 817, 18, 24],
     "turtle_walk1_reverse": [212, 817, 18, 24],
-    "turtle_walk2_reverse": [182, 817, 18, 24]
+    "turtle_walk2_reverse": [182, 817, 18, 24],
+    "carnivorousPlant_open": [586, 866, 18, 23],
+    "carnivorousPlant_close": [607, 866, 18, 23],
+    "carnivorousPlant_dark_open": [586, 891, 18, 23],
+    "carnivorousPlant_dark_close": [607, 891, 18, 23]
 }

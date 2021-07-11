@@ -29,7 +29,7 @@ class Hero(GameObject):
 
         _, clip = AssetManager.instance().get(AssetType.SpriteSheet, Config.turtle_walk[self.__walk_index], sheet_name = Config.turtle_spritesheet_name)
 
-        self.position = pygame.math.Vector2(Config.turtle_initial_position)
+        self.position = pygame.math.Vector2(Config.scene[Config.current_level]["turtle_initial_position"])
         self.rect = clip.copy()
         #self.rect.inflate_ip(self.rect.width * -0.60, self.rect.height * -0.2)
 
@@ -106,9 +106,9 @@ class Hero(GameObject):
         pass
 
     def check_bounds(self):
-        if self.position.x < Config.turtle_initial_position[0]:
-            self.__world.screenCenterX = max(Config.screen_size[0] / 2, self.__world.screenCenterX - (Config.turtle_initial_position[0] - self.position.x))
-            self.position.x = Config.turtle_initial_position[0]
+        if self.position.x < Config.scene[Config.current_level]["turtle_initial_position"][0]:
+            self.__world.screenCenterX = max(Config.screen_size[0] / 2, self.__world.screenCenterX - (Config.scene[Config.current_level]["turtle_initial_position"][0] - self.position.x))
+            self.position.x = Config.scene[Config.current_level]["turtle_initial_position"][0]
         elif self.position.x > Config.screen_size[0] / 2:
             self.__world.screenCenterX = min(3270, self.__world.screenCenterX + (self.position.x - Config.screen_size[0] / 2))
             self.position.x = Config.screen_size[0] / 2

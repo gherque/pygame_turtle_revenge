@@ -1,5 +1,6 @@
 {
     "floor": [373, 124, 16, 16],
+    "floor_dark": [393, 124, 16, 16],
     "cloud_single": [160, 196, 35, 27],
     "cloud_double": [45, 196, 50, 27],
     "cloud_triple": [94, 196, 68, 27],
@@ -9,13 +10,16 @@
     "bush_double": [150, 251, 50, 18],
     "bush_triple": [83, 251, 68, 18],
     "castle": [270, 218, 83, 80],
+    "big_castle": [393, 511, 150, 175],
     "pipe_vertical_end": [613, 45, 34, 33],
     "pipe_vertical_extension": [615, 82, 30, 16],
     "pipe_horizontal_end": [573, 102, 32, 32],
     "pipe_horizontal_conn": [610, 102, 34, 32],
-    "block": [372, 143, 16, 15],
+    "block": [372, 142, 16, 16],
+    "block_dark": [393, 142, 16, 16],
     "final_flag": [284, 45, 22, 169],
     "bricks": [373, 102, 16, 16],
+    "bricks_dark": [393, 102, 16, 16],
     "addon1": [372, 160, 16, 16],
     "addon1_disable": [372, 179, 16, 16],
     "mushroom_walk1": [186, 892, 18, 18],
@@ -31,5 +35,9 @@
     "carnivorousPlant_open": [586, 866, 18, 23],
     "carnivorousPlant_close": [607, 866, 18, 23],
     "carnivorousPlant_dark_open": [586, 891, 18, 23],
-    "carnivorousPlant_dark_close": [607, 891, 18, 23]
+    "carnivorousPlant_dark_close": [607, 891, 18, 23],
+    "tree_trunk_block": [146, 301, 16, 16],
+    "tree_top_left_block": [129, 284, 16, 16],
+    "tree_top_center_block": [146, 284, 16, 16],
+    "tree_top_right_block": [163, 284, 16, 16]
 }

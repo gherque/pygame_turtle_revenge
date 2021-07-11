@@ -35,13 +35,8 @@ class World:
         self.__start_ticks = pygame.time.get_ticks()
 
     def init(self):
-        # TODO: Pintar enemigos (plantas carnívoras, luigis, marios)
-        # TODO: Colisiones con enemigos (si es por arriba o atacando hacia el lado del enemigo -> ganar, si no morir)
+        # TODO: Pintar enemigos (luigis, marios)
         # TODO: Nuevo entity tipo fall para acciones en tuberías (si estás colisionando y pulsas el botón para abajo en tuberías verticales o para la dirección de la tubería horizontal, next level)
-        # TODO: En config scenes, poner la posición inicial del player (Así coincide con puerta castillo o encima tubería...)
-        # TODO: En config scenes, poner el límite en x del escenario para saber cuando el player no puede avanzar más
-        # TODO: En config scenes, poner el color del fondo del escenario
-        # TODO: Corregir estructuras de bloque en nivel 2-2
 
         AssetManager.instance().load(AssetType.SpriteSheet, Config.mario_spritesheet_name, Config.mario_spritesheet_filename, data_filename = Config.mario_spritesheet_coordinates_filename)
         AssetManager.instance().load(AssetType.Font, Config.font_name_medium, Config.font_filename, font_size = Config.font_size_medium)
@@ -68,8 +63,24 @@ class World:
         for triple_bush in Config.scene[Config.current_level]["bushs"]["triple"]:
             self.__transparentSceneItems.add(SceneItem(self, Config.scene_bush_triple, triple_bush))
 
-        # Castle
+        # Trees
+        for tree in Config.scene[Config.current_level]["trees"]:
+            for i in range(tree[1]): # height
+                for j in range(tree[2]): # width
+                    # TODO: si estás en última altura pintas césped (uno antes del inicio left, luego center hasta el width y uno right)
+                    # TODO: si no estás en última altura pintas bloque
+                    if i == tree[1] - 1: # last level
+                        if j == 0:
+                            self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_top_left_block, ((tree[0] - 1) * 16 + j * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
+                        elif j == tree[2] - 1:
+                            self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_top_right_block, (tree[0] * 16 + (j + 1) * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_top_center_block, (tree[0] * 16 + j * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
+                    else:
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_trunk_block, (tree[0] * 16 + j * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
+
+        # Castles
         self.__transparentSceneItems.add(SceneItem(self, Config.scene_castle, Config.scene[Config.current_level]["castle"]))
+        self.__transparentSceneItems.add(SceneItem(self, Config.scene_big_castle, Config.scene[Config.current_level]["big_castle"]))
 
         # Final Flag
         self.__sceneItemGroup.add(SceneItem(self, Config.scene_final_flag, Config.scene[Config.current_level]["finalFlag"]))
@@ -80,6 +91,16 @@ class World:
             for j in range(floorHole[0]):
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
+                i += 1
+            for z in range(floorHole[1] - 1):
+                self.__fallGroup.add(Fall(self, ((i + 1) * 16, Config.screen_size[1] - 32)))
+                i += 1
+            i += 1
+
+        for floorHole in Config.scene[Config.current_level]["floorHoles_dark"]:
+            for j in range(floorHole[0]):
+                self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor_dark, (i * 16 + 8, Config.screen_size[1] - 32 + 8)))
+                self.__sceneItemGroup.add(SceneItem(self, Config.scene_floor_dark, (i * 16 + 8, Config.screen_size[1] - 16 + 8)))
                 i += 1
             for z in range(floorHole[1] - 1):
                 self.__fallGroup.add(Fall(self, ((i + 1) * 16, Config.screen_size[1] - 32)))
@@ -103,7 +124,12 @@ class World:
         for block in Config.scene[Config.current_level]["blockStructures"]:
             for i in range(block[2]):
                 for j in range(block[1]):
-                    if block[3]:
+                    if block[1] == 1:
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        if i == (block[2] - 1):
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 - 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+                    elif block[3]:
                         if j == 0:
                             self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i) * 16 - 12, Config.screen_size[1] - 32 - i * 16 - 16)))
                         self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + (j + i) * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
@@ -119,12 +145,44 @@ class World:
                     if j + i >= (block[1] - 1):
                         break
 
+        for block in Config.scene[Config.current_level]["blockStructures_dark"]:
+            for i in range(block[2]):
+                for j in range(block[1]):
+                    if block[1] == 1:
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_block_dark, (block[0] * 16 + 8, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        if i == (block[2] - 1):
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 - 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+                    elif block[3]:
+                        if j == 0:
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i) * 16 - 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_block_dark, (block[0] * 16 + 8 + (j + i) * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        if i == (block[2] - 1) and j + i == (block[1] - 1):
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i) * 16 + 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+                    else:
+                        if i == (block[2] - 1) and j == 0:
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 - 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_block_dark, (block[0] * 16 + 8 + j * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
+                        if j + i == (block[1] - 1):
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 + 12, Config.screen_size[1] - 32 - i * 16 - 16)))
+
+                    if j + i >= (block[1] - 1):
+                        break
+
         # Upper floors
         for bricksObject in Config.scene[Config.current_level]["bricks"]:
             for i in range(bricksObject[1]):
                 if i == 0:
                     self.__fallGroup.add(Fall(self, (bricksObject[0] * 16 + 8 + i * 16 - 16, Config.screen_size[1] - 32 - bricksObject[2] * 16 - 25)))
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_bricks, (bricksObject[0] * 16 + 8 + i * 16, Config.screen_size[1] - 32 - 16 * bricksObject[2] - 8)))
+                if i == (bricksObject[1] - 1):
+                    self.__fallGroup.add(Fall(self, (bricksObject[0] * 16 + 8 + i * 16 + 16, Config.screen_size[1] - 32 - bricksObject[2] * 16 - 25)))
+
+        for bricksObject in Config.scene[Config.current_level]["bricks_dark"]:
+            for i in range(bricksObject[1]):
+                if i == 0:
+                    self.__fallGroup.add(Fall(self, (bricksObject[0] * 16 + 8 + i * 16 - 16, Config.screen_size[1] - 32 - bricksObject[2] * 16 - 25)))
+                self.__sceneItemGroup.add(SceneItem(self, Config.scene_bricks_dark, (bricksObject[0] * 16 + 8 + i * 16, Config.screen_size[1] - 32 - 16 * bricksObject[2] - 8)))
                 if i == (bricksObject[1] - 1):
                     self.__fallGroup.add(Fall(self, (bricksObject[0] * 16 + 8 + i * 16 + 16, Config.screen_size[1] - 32 - bricksObject[2] * 16 - 25)))
 

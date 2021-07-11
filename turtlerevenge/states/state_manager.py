@@ -29,7 +29,7 @@ class StateManager:
         self.__current_state.update(delta_time)
 
     def render(self, surface):
-        surface.fill(Config.gaming_background_color if self.__current_state_name == "GamePlay" else Config.background_color)
+        surface.fill(Config.scene[Config.current_level]["background_color"] if self.__current_state_name == "GamePlay" else Config.background_color)
         self.__current_state.render(surface)
 
     def quit(self):

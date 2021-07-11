@@ -6,8 +6,7 @@ class Config:
     screen_size = (640, 480)
     game_title = "Turtle Revenge"
     background_color = (0, 0, 0)
-    gaming_background_color = (0, 138, 197)
-    current_level = 2
+    current_level = 4
     total_levels = 5
     collision_tolerance = 10
     game_over_time = 1000
@@ -72,6 +71,7 @@ class Config:
     turtle_jump_reverse = "jump_reverse"
     turtle_attack_reverse = ["attack1_reverse", "attack2_reverse", "attack3_reverse"]
     scene_floor = "floor"
+    scene_floor_dark = "floor_dark"
     scene_cloud_single = "cloud_single"
     scene_cloud_double = "cloud_double"
     scene_cloud_triple = "cloud_triple"
@@ -81,13 +81,16 @@ class Config:
     scene_bush_double = "bush_double"
     scene_bush_triple = "bush_triple"
     scene_castle = "castle"
+    scene_big_castle = "big_castle"
     scene_pipe_vertical_end = "pipe_vertical_end"
     scene_pipe_vertical_extension = "pipe_vertical_extension"
     scene_pipe_horizontal_end = "pipe_horizontal_end"
     scene_pipe_horizontal_conn = "pipe_horizontal_conn"
     scene_block = "block"
+    scene_block_dark = "block_dark"
     scene_final_flag = "final_flag"
     scene_bricks = "bricks"
+    scene_bricks_dark = "bricks_dark"
     scene_addon1 = "addon1"
     scene_addon1_disable = "addon1_disable"
     pizza_spinning = ["pizza1", "pizza2", "pizza3", "pizza4", "pizza5", "pizza6"]
@@ -99,11 +102,14 @@ class Config:
     turtle_reverse = ["turtle_walk1_reverse", "turtle_walk2_reverse"]
     carnivorousPlant = ["carnivorousPlant_open", "carnivorousPlant_close"]
     carnivorousPlant_dark = ["carnivorousPlant_dark_open", "carnivorousPlant_dark_close"]
+    scene_tree_trunk_block = "tree_trunk_block"
+    scene_tree_top_left_block = "tree_top_left_block"
+    scene_tree_top_center_block = "tree_top_center_block"
+    scene_tree_top_right_block = "tree_top_right_block"
 
     # Entities config
     turtle_speed = 0.1
     turtle_max_jumping_height = 80.0
-    turtle_initial_position = (40, screen_size[1] - 32 - 24)
     pizza_speed = 0.075
     foolEnemy_speed = 0.05
     plants_speed = 0.02
@@ -114,11 +120,15 @@ class Config:
         # Level 1
         {
             "availableTime": 240.0,
+            "turtle_initial_position": (15, screen_size[1] - 32 - 24),
+            "background_color": (0, 138, 197),
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
                 (70, 2),
                 (15, 3),
                 (64, 2),
                 (69, 0)
+            ],
+            "floorHoles_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
             ],
             "clouds": {
                 "single": [ # Array of coordinates
@@ -184,6 +194,7 @@ class Config:
                 ]
             },
             "castle": (202 * 16 + 42, screen_size[1] - 16 * 2 - 40),
+            "big_castle": (300 * 16 + 42, screen_size[1] - 16 * 2 - 40),
             "pipes": {
                 "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
                     (28, 0),
@@ -203,6 +214,8 @@ class Config:
                 (156, 4, 4, False),
                 (181, 9, 8, True)
             ],
+            "blockStructures_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+            ],
             "finalFlag": (198 * 16 + 12, screen_size[1] - 16 * 2 - 85),
             "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
                 (20, 5, 4),
@@ -216,6 +229,8 @@ class Config:
                 (128, 4, 9),
                 (129, 2, 4),
                 (168, 4, 4)
+            ],
+            "bricks_dark": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
             ],
             "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
                 (16, 4),
@@ -266,13 +281,19 @@ class Config:
             ],
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
                 ("turtle", 107, 0)
+            ],
+            "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
             ]
         },
         # Level 2 - 1
         {
             "availableTime": 240.0,
+            "turtle_initial_position": (40, screen_size[1] - 32 - 24),
+            "background_color": (0, 138, 197),
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
                 (24, 24)
+            ],
+            "floorHoles_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
             ],
             "clouds": {
                 "single": [ # Array of coordinates
@@ -300,6 +321,7 @@ class Config:
                 ]
             },
             "castle": (0 + 42, screen_size[1] - 16 * 2 - 40),
+            "big_castle": (300 * 16 + 42, screen_size[1] - 16 * 2 - 40),
             "pipes": {
                 "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
                     (12, 2)
@@ -310,8 +332,12 @@ class Config:
             },
             "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
             ],
+            "blockStructures_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+            ],
             "finalFlag": (1000, screen_size[1] - 16 * 2 - 85),
             "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+            ],
+            "bricks_dark": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
             ],
             "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
             ],
@@ -322,12 +348,18 @@ class Config:
             "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
             ],
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+            ],
+            "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
             ]
         },
         # Level 2 - 2
         {
             "availableTime": 240.0,
+            "turtle_initial_position": (50, screen_size[1] - 32 - 24),
+            "background_color": (0, 0, 0),
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+            ],
+            "floorHoles_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
                 (80, 3),
                 (37, 2),
                 (2, 2),
@@ -358,6 +390,7 @@ class Config:
                 ]
             },
             "castle": (5000, screen_size[1] - 16 * 2 - 40),
+            "big_castle": (300 * 16 + 42, screen_size[1] - 16 * 2 - 40),
             "pipes": {
                 "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
                     (103, 1),
@@ -369,7 +402,9 @@ class Config:
                     (169, 3)
                 ]
             },
-            "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
+            "blockStructures": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+            ],
+            "blockStructures_dark": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
                 (17, 1, 1, True),
                 (19, 1, 2, True),
                 (21, 1, 3, True),
@@ -382,6 +417,8 @@ class Config:
             ],
             "finalFlag": (5000, screen_size[1] - 16 * 2 - 85),
             "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+            ],
+            "bricks_dark": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
                 (0, 1, 0),
                 (0, 1, 1),
                 (0, 1, 2),
@@ -547,13 +584,22 @@ class Config:
                 ("carnivorousPlant_dark", 116, 2)
             ],
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+                ("turtle", 45, 0),
+                ("turtle", 47, 0),
+                ("turtle", 67, 0)
+            ],
+            "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
             ]
         },
         # Level 2 - 3
         {
             "availableTime": 240.0,
+            "turtle_initial_position": (65, screen_size[1] - 32 - 32 - 24),
+            "background_color": (0, 138, 197),
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
                 (55, 0)
+            ],
+            "floorHoles_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
             ],
             "clouds": {
                 "single": [ # Array of coordinates
@@ -584,6 +630,7 @@ class Config:
                 ]
             },
             "castle": (26 * 16 + 42, screen_size[1] - 16 * 2 - 40),
+            "big_castle": (300 * 16 + 42, screen_size[1] - 16 * 2 - 40),
             "pipes": {
                 "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
                     (3, 0)
@@ -594,8 +641,12 @@ class Config:
             "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
                 (5, 9, 8, True)
             ],
+            "blockStructures_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+            ],
             "finalFlag": (23 * 16, screen_size[1] - 16 * 2 - 85),
             "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+            ],
+            "bricks_dark": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
             ],
             "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
             ],
@@ -606,6 +657,97 @@ class Config:
             "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
             ],
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+            ],
+            "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
+            ]
+        },
+        # Level 3
+        {
+            "availableTime": 240.0,
+            "turtle_initial_position": (40, screen_size[1] - 32 - 24),
+            "background_color": (0, 138, 197),
+            "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+                (16, 200)
+            ],
+            "floorHoles_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+            ],
+            "clouds": {
+                "single": [ # Array of coordinates
+                    (9 * 16 + 17, 150 + 127),
+                    (36 * 16 + 17, 150 + 127),
+                    (40 * 16 + 17, 150 + 100),
+                    (48 * 16 + 17, 150 + 160),
+                    (60 * 16 + 17, 150 + 127),
+                    (87 * 16 + 17, 150 + 127),
+                    (91 * 16 + 17, 150 + 100),
+                    (99 * 16 + 17, 150 + 160),
+                    (111 * 16 + 17, 150 + 127),
+                    (138 * 16 + 17, 150 + 127),
+                    (142 * 16 + 17, 150 + 100),
+                    (150 * 16 + 17, 150 + 160),
+                    (162 * 16 + 17, 150 + 127),
+                    (189 * 16 + 17, 150 + 127),
+                    (193 * 16 + 17, 150 + 100),
+                    (201 * 16 + 17, 150 + 160),
+                ],
+                "double": [ # Array of coordinates
+                    (3 * 16 + 25, 150 + 27),
+                    (19 * 16 + 25, 150),
+                    (54 * 16 + 25, 150 + 27),
+                    (70 * 16 + 25, 150),
+                    (105 * 16 + 25, 150 + 27),
+                    (121 * 16 + 25, 150),
+                    (156 * 16 + 25, 150 + 27),
+                    (172 * 16 + 25, 150)
+                ],
+                "triple": [ # Array of coordinates
+                ]
+            },
+            "mountains": {
+                "small": [ # Array of coordinates
+                ],
+                "big": [ # Array of coordinates
+                ]
+            },
+            "bushs": {
+                "single": [ # Array of coordinates
+                ],
+                "double": [ # Array of coordinates
+                ],
+                "triple": [ # Array of coordinates
+                ]
+            },
+            "castle": (0 + 42, screen_size[1] - 16 * 2 - 40),
+            "big_castle": (300 * 16 + 75, screen_size[1] - 16 * 2 - 87),
+            "pipes": {
+                "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
+                ],
+                "horizontal": [ # Array of objects with syntax (number of floor pieces before each horizontal pipe, number of pices of height)
+                ]
+            },
+            "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
+            ],
+            "blockStructures_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+            ],
+            "finalFlag": (1000, screen_size[1] - 16 * 2 - 85),
+            "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+            ],
+            "bricks_dark": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+            ],
+            "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
+            ],
+            "pizzaSlices": [ # Array of coordinates
+            ],
+            "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
+            ],
+            "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
+            ],
+            "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+            ],
+            "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
+                (19, 3, 2),
+                (27, 10, 3),
+                (25, 6, 6)
             ]
         }
     ]

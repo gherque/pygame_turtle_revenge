@@ -15,6 +15,7 @@
 **Turtles sprites:** https://retrogamezone.co.uk/teenagemutantninjaturtles.htm
 **Mario sprites:** https://c0.klipartz.com/pngpicture/800/715/gratis-png-super-mario-fail-parodia-ilustracion-super-mario-bros-3-nuevos-super-mario-bros-super-mario-bros-2-mario-bros-thumbnail.png
 **Mario worlds maps:** https://oldschoolgamer.foroactivo.com/t116-super-mario-bros-1-nes
+**Sounds:** http://www.sonidosmp3gratis.com
 
 ### Other references
 
@@ -23,3 +24,4 @@
 **Markdown guide:** https://www.markdownguide.org/basic-syntax/
 **SpriteSheet get position:** https://w3samples.com/Sprite-Get-Position
 **Photopea:** https://www.photopea.com/
+**Audacity:** https://audacity.es/

@@ -2,6 +2,7 @@ import pygame
 
 from turtlerevenge.config import Config
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
+from turtlerevenge.assets.sound_manager import SoundManager
 from turtlerevenge.entities.gameobject import GameObject
 
 class Friend(GameObject):
@@ -12,6 +13,7 @@ class Friend(GameObject):
         self.__walk_index = 0
 
         _, self.clip = AssetManager.instance().get(AssetType.SpriteSheet, Config.turtle[self.__walk_index], sheet_name = Config.mario_spritesheet_name)
+        AssetManager.instance().load(AssetType.Sound, Config.sfx_friendHello_name, Config.sfx_friendHello_filename)
 
         self.coordinates = coordinates
         self.position = pygame.math.Vector2(coordinates)
@@ -60,3 +62,6 @@ class Friend(GameObject):
 
     def change_direction(self):
         self.__speed *= -1
+
+    def greet_hero(self):
+        SoundManager.instance().play_sound(Config.sfx_friendHello_name)

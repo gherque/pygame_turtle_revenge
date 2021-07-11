@@ -7,8 +7,8 @@ class Config:
     game_title = "Turtle Revenge"
     background_color = (0, 0, 0)
     gaming_background_color = (0, 138, 197)
-    current_level = 0
-    total_levels = 3
+    current_level = 3
+    total_levels = 5
     collision_tolerance = 10
     game_over_time = 1000
     end_game_time = 1000
@@ -25,7 +25,7 @@ class Config:
     font_size_massive = 75
     # sizes: mini, tiny, small, medium, large, big, huge, massive
 
-    # Sounds
+    # Sounds & Sfx
     sound_intro_name = "sound_intro"
     sound_intro_filename = ["turtlerevenge", "assets", "music", "Intro.mp3"]
     sound_gameover_name = "sound_gameover"
@@ -36,6 +36,16 @@ class Config:
     sound_action_filename = ["turtlerevenge", "assets", "music", "Action.mp3"]
     sound_about_name = "sound_about"
     sound_about_filename = ["turtlerevenge", "assets", "music", "About.mp3"]
+    sfx_friendHello_name = "friendHello"
+    sfx_friendHello_filename = ["turtlerevenge", "assets", "sfx", "friendHello.wav"]
+    sfx_prize_name = "prize"
+    sfx_prize_filename = ["turtlerevenge", "assets", "sfx", "prize.wav"]
+    sfx_smashEnemy_name = "smashEnemy"
+    sfx_smashEnemy_filename = ["turtlerevenge", "assets", "sfx", "smashEnemy.wav"]
+    sfx_swordStrike_name = "swordStrike"
+    sfx_swordStrike_filename = ["turtlerevenge", "assets", "sfx", "swordStrike.wav"]
+    sfx_turtleDie_name = "turtleDie"
+    sfx_turtleDie_filename = ["turtlerevenge", "assets", "sfx", "turtleDie.wav"]
 
     # Turtle brand colors
     color_red = (237, 28, 36)
@@ -73,6 +83,8 @@ class Config:
     scene_castle = "castle"
     scene_pipe_vertical_end = "pipe_vertical_end"
     scene_pipe_vertical_extension = "pipe_vertical_extension"
+    scene_pipe_horizontal_end = "pipe_horizontal_end"
+    scene_pipe_horizontal_conn = "pipe_horizontal_conn"
     scene_block = "block"
     scene_final_flag = "final_flag"
     scene_bricks = "bricks"
@@ -87,15 +99,16 @@ class Config:
     # Entities config
     turtle_speed = 0.1
     turtle_max_jumping_height = 80.0
-    turtle_initial_position = (15, screen_size[1] - 32 - 24)
+    turtle_initial_position = (30, screen_size[1] - 32 - 24)
     pizza_speed = 0.075
     foolEnemy_speed = 0.05
     friend_speed = 0.05
 
     # Scene
     scene = [
-        # Level 0
+        # Level 1
         {
+            "availableTime": 240.0,
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
                 (70, 2),
                 (15, 3),
@@ -174,6 +187,8 @@ class Config:
                     (58, 2),
                     (164, 0),
                     (179, 0)
+                ],
+                "horizontal": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
                 ]
             },
             "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
@@ -187,30 +202,30 @@ class Config:
             "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
                 (20, 5, 4),
                 (77, 3, 4),
-                (80, 8, 8),
-                (91, 4, 8),
+                (80, 8, 9),
+                (91, 4, 9),
                 (94, 1, 4),
                 (99, 2, 4),
                 (118, 1, 4),
-                (121, 3, 8),
-                (128, 4, 8),
+                (121, 3, 9),
+                (128, 4, 9),
                 (129, 2, 4),
                 (168, 4, 4)
             ],
             "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
                 (16, 4),
                 (21, 4),
-                (22, 8),
+                (22, 9),
                 (23, 4),
                 (78, 4),
-                (94, 8),
+                (94, 9),
                 (94, 4),
                 (105, 4),
-                (108, 8),
+                (108, 9),
                 (108, 4),
                 (111, 4),
-                (129, 8),
-                (130, 8),
+                (129, 9),
+                (130, 9),
                 (170, 4)
             ],
             "pizzaSlices": [ # Array of coordinates
@@ -220,9 +235,9 @@ class Config:
             ],
             "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
                 (16, 4),
-                (22, 8),
+                (22, 9),
                 (105, 4),
-                (108, 8),
+                (108, 9),
                 (108, 4),
                 (111, 4)
             ],
@@ -231,8 +246,8 @@ class Config:
                 ("mushroom", 41, 0),
                 ("mushroom", 51, 0),
                 ("mushroom", 54, 0),
-                ("mushroom", 80, 9),
-                ("mushroom", 83, 9),
+                ("mushroom", 80, 10),
+                ("mushroom", 83, 10),
                 ("mushroom", 97, 0),
                 ("mushroom", 99, 0),
                 ("mushroom", 114, 0),
@@ -246,6 +261,318 @@ class Config:
             ],
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
                 ("turtle", 107, 0)
+            ]
+        },
+        # Level 2 - 1
+        {
+            "availableTime": 240.0,
+            "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+                (24, 24)
+            ],
+            "clouds": {
+                "single": [ # Array of coordinates
+                    (10 * 16 + 17, 150 + 27)
+                ],
+                "double": [ # Array of coordinates
+                    (4 * 16 + 25, 150)
+                ],
+                "triple": [ # Array of coordinates
+                    (18 * 16 + 33, 150 + 27)
+                ]
+            },
+            "mountains": {
+                "small": [ # Array of coordinates
+                ],
+                "big": [ # Array of coordinates
+                ]
+            },
+            "bushs": {
+                "single": [ # Array of coordinates
+                ],
+                "double": [ # Array of coordinates
+                ],
+                "triple": [ # Array of coordinates
+                ]
+            },
+            "castle": (0 + 42, screen_size[1] - 16 * 2 - 40),
+            "pipes": {
+                "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
+                    (12, 2)
+                ],
+                "horizontal": [ # Array of objects with syntax (number of floor pieces before each horizontal pipe, number of pices of height)
+                    (10, 0)
+                ]
+            },
+            "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
+            ],
+            "finalFlag": (1000, screen_size[1] - 16 * 2 - 85),
+            "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+            ],
+            "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
+            ],
+            "pizzaSlices": [ # Array of coordinates
+            ],
+            "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
+            ],
+            "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
+            ],
+            "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+            ]
+        },
+        # Level 2 - 2
+        {
+            "availableTime": 240.0,
+            "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+                (80, 3),
+                (37, 2),
+                (2, 2),
+                (12, 8),
+                (8, 8),
+                (30, 0)
+            ],
+            "clouds": {
+                "single": [ # Array of coordinates
+                ],
+                "double": [ # Array of coordinates
+                ],
+                "triple": [ # Array of coordinates
+                ]
+            },
+            "mountains": {
+                "small": [ # Array of coordinates
+                ],
+                "big": [ # Array of coordinates
+                ]
+            },
+            "bushs": {
+                "single": [ # Array of coordinates
+                ],
+                "double": [ # Array of coordinates
+                ],
+                "triple": [ # Array of coordinates
+                ]
+            },
+            "castle": (5000, screen_size[1] - 16 * 2 - 40),
+            "pipes": {
+                "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
+                    (103, 1),
+                    (109, 2),
+                    (115, 0),
+                    (171, 40)
+                ],
+                "horizontal": [ # Array of objects with syntax (number of floor pieces before each horizontal pipe, number of pices of height)
+                    (169, 3)
+                ]
+            },
+            "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
+                (17, 1, 1, True),
+                (19, 1, 2, True),
+                (21, 1, 3, True),
+                (23, 1, 4, True),
+                (25, 1, 4, True),
+                (27, 1, 3, True),
+                (31, 1, 3, True),
+                (33, 1, 2, True),
+                (133, 5, 4, True)
+            ],
+            "finalFlag": (5000, screen_size[1] - 16 * 2 - 85),
+            "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+                (0, 1, 0),
+                (0, 1, 1),
+                (0, 1, 2),
+                (0, 1, 3),
+                (0, 1, 4),
+                (0, 1, 5),
+                (0, 1, 6),
+                (0, 1, 7),
+                (0, 1, 8),
+                (0, 1, 9),
+                (0, 1, 10),
+                (0, 1, 11),
+                (0, 1, 12),
+                (0, 1, 13),
+                (0, 1, 14),
+                (0, 1, 15),
+                (0, 1, 16),
+                (0, 1, 17),
+                (0, 1, 18),
+                (0, 1, 19),
+                (6, 150, 19),
+                (39, 3, 4),
+                (39, 1, 5),
+                (39, 1, 6),
+                (41, 1, 5),
+                (41, 4, 6),
+                (44, 1, 5),
+                (44, 3, 4),
+                (46, 1, 5),
+                (46, 1, 6),
+                (51, 4, 4),
+                (51, 2, 5),
+                (51, 2, 6),
+                (51, 2, 7),
+                (51, 2, 8),
+                (51, 2, 9),
+                (53, 2, 10),
+                (53, 2, 11),
+                (53, 2, 12),
+                (53, 2, 13),
+                (53, 2, 14),
+                (53, 2, 15),
+                (53, 2, 16),
+                (53, 2, 17),
+                (53, 2, 18),
+                (53, 2, 19),
+                (57, 6, 19),
+                (57, 6, 18),
+                (57, 6, 17),
+                (57, 6, 16),
+                (57, 6, 15),
+                (57, 6, 14),
+                (57, 6, 13),
+                (57, 6, 12),
+                (57, 6, 11),
+                (57, 6, 10),
+                (61, 2, 9),
+                (61, 2, 8),
+                (61, 2, 7),
+                (61, 2, 6),
+                (61, 2, 5),
+                (57, 6, 4),
+                (65, 4, 19),
+                (65, 4, 18),
+                (65, 4, 17),
+                (65, 4, 16),
+                (65, 4, 15),
+                (65, 4, 14),
+                (65, 4, 13),
+                (65, 4, 12),
+                (65, 4, 11),
+                (65, 4, 10),
+                (66, 1, 9),
+                (66, 1, 8),
+                (66, 1, 7),
+                (66, 1, 6),
+                (66, 1, 5),
+                (66, 3, 4),
+                (68, 1, 5),
+                (71, 2, 9),
+                (71, 2, 8),
+                (71, 2, 7),
+                (71, 2, 6),
+                (71, 2, 5),
+                (71, 2, 4),
+                (75, 4, 4),
+                (75, 4, 10),
+                (75, 4, 11),
+                (75, 4, 12),
+                (75, 4, 13),
+                (75, 4, 14),
+                (75, 4, 15),
+                (75, 4, 16),
+                (75, 4, 17),
+                (75, 4, 18),
+                (75, 4, 19),
+                (84, 6, 5),
+                (84, 6, 6),
+                (122, 2, 0),
+                (122, 2, 1),
+                (122, 2, 2),
+                (146, 7, 4),
+                (162, 30, 0),
+                (162, 30, 1),
+                (162, 30, 2),
+                (173, 20, 3),
+                (173, 20, 4),
+                (173, 20, 5),
+                (173, 20, 6),
+                (173, 20, 7),
+                (173, 20, 8),
+                (173, 20, 9),
+                (173, 20, 10),
+                (173, 20, 11),
+                (173, 20, 12),
+                (173, 20, 13),
+                (173, 20, 14),
+                (173, 20, 15),
+                (173, 20, 16),
+                (173, 20, 17),
+                (173, 20, 18),
+                (173, 20, 19)
+            ],
+            "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
+                (10, 4),
+                (11, 4),
+                (12, 4),
+                (13, 4),
+                (14, 4),
+            ],
+            "pizzaSlices": [ # Array of coordinates
+            ],
+            "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
+            ],
+            "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
+            ],
+            "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+            ]
+        },
+        # Level 2 - 3
+        {
+            "availableTime": 240.0,
+            "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
+                (42, 0)
+            ],
+            "clouds": {
+                "single": [ # Array of coordinates
+                    (25 * 16 + 17, 150 + 27),
+                    (36 * 16 + 17, 150)
+                ],
+                "double": [ # Array of coordinates
+                    (5 * 16 + 25, 150)
+                ],
+                "triple": [ # Array of coordinates
+                ]
+            },
+            "mountains": {
+                "small": [ # Array of coordinates
+                    (32 * 16 + 26, screen_size[1] - 16 * 2 - 10)
+                ],
+                "big": [ # Array of coordinates
+                    (16 * 16 + 43, screen_size[1] - 16 * 2 - 18)
+                ]
+            },
+            "bushs": {
+                "single": [ # Array of coordinates
+                    (40 * 16 + 17, screen_size[1] - 32 - 9)
+                ],
+                "double": [ # Array of coordinates
+                ],
+                "triple": [ # Array of coordinates
+                ]
+            },
+            "castle": (26 * 16 + 42, screen_size[1] - 16 * 2 - 40),
+            "pipes": {
+                "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
+                    (3, 0)
+                ],
+                "horizontal": [ # Array of objects with syntax (number of floor pieces before each horizontal pipe, number of pices of height)
+                ]
+            },
+            "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
+                (5, 9, 8, True)
+            ],
+            "finalFlag": (23 * 16, screen_size[1] - 16 * 2 - 85),
+            "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
+            ],
+            "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
+            ],
+            "pizzaSlices": [ # Array of coordinates
+            ],
+            "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
+            ],
+            "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
+            ],
+            "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
             ]
         }
     ]

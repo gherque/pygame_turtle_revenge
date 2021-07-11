@@ -2,6 +2,7 @@ import pygame
 
 from turtlerevenge.config import Config
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
+from turtlerevenge.assets.sound_manager import SoundManager
 from turtlerevenge.entities.gameobject import GameObject
 
 class MushroomEnemy(GameObject):
@@ -14,6 +15,7 @@ class MushroomEnemy(GameObject):
         self.__is_player_moving_left = False
 
         _, self.clip = AssetManager.instance().get(AssetType.SpriteSheet, Config.mushroom[self.__walk_index], sheet_name = Config.mario_spritesheet_name)
+        AssetManager.instance().load(AssetType.Sound, Config.sfx_smashEnemy_name, Config.sfx_smashEnemy_filename)
 
         self.coordinates = coordinates
         self.position = pygame.math.Vector2(coordinates)
@@ -33,7 +35,7 @@ class MushroomEnemy(GameObject):
         movement = pygame.math.Vector2(0.0, 0.0)
         if self.is_removed:
             if self.position.y <= Config.screen_size[1]:
-                movement = pygame.math.Vector2(abs(self.__speed) / 5 * (-1 if self.__is_player_moving_left else 1), abs(self.__speed))
+                movement = pygame.math.Vector2(abs(self.__speed) * (-1 if self.__is_player_moving_left else 1), abs(self.__speed))
         else:
             movement = pygame.math.Vector2(self.__speed, 0.0)
 
@@ -70,6 +72,7 @@ class MushroomEnemy(GameObject):
             self.__speed *= -1
 
     def remove(self, is_player_moving_left):
-        self.is_removed = True
-        self.__is_player_moving_left = is_player_moving_left
-        # TODO: Play sfx sound
+        if not self.is_removed:
+            self.is_removed = True
+            self.__is_player_moving_left = is_player_moving_left
+            SoundManager.instance().play_sound(Config.sfx_smashEnemy_name)

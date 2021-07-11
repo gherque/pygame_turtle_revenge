@@ -2,6 +2,7 @@ import pygame
 
 from turtlerevenge.config import Config
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
+from turtlerevenge.assets.sound_manager import SoundManager
 from turtlerevenge.entities.gameobject import GameObject
 
 class Hero(GameObject):
@@ -17,8 +18,11 @@ class Hero(GameObject):
         self.__attack_index = 0
         self.__jumping_height = 0
         self.__direction_left = False
+        self.__is_removed = False
 
         AssetManager.instance().load(AssetType.SpriteSheet, Config.turtle_spritesheet_name, Config.turtle_spritesheet_filename, data_filename = Config.turtle_spritesheet_coordinates_filename)
+        AssetManager.instance().load(AssetType.Sound, Config.sfx_swordStrike_name, Config.sfx_swordStrike_filename)
+        AssetManager.instance().load(AssetType.Sound, Config.sfx_turtleDie_name, Config.sfx_turtleDie_filename)
 
         _, clip = AssetManager.instance().get(AssetType.SpriteSheet, Config.turtle_walk[self.__walk_index], sheet_name = Config.turtle_spritesheet_name)
 
@@ -42,25 +46,28 @@ class Hero(GameObject):
             self.__is_moving_right = is_pressed
         elif key == pygame.K_SPACE:
             self.__is_attacking = is_pressed
-            # TODO: Play sfx sound
+            SoundManager.instance().play_sound(Config.sfx_swordStrike_name)
 
     def update(self, delta):
         movement = pygame.math.Vector2(0.0, 0.0)
 
-        if self.__is_moving_up:
-            if self.__jumping_height < Config.turtle_max_jumping_height and not self.__is_moving_down:
-                movement.y -= Config.turtle_speed
-                self.__jumping_height += Config.turtle_speed * delta
-            else:
-                self.__is_moving_down = True
-        if self.__is_moving_down:
-            movement.y += Config.turtle_speed
-        if self.__is_moving_left:
-            movement.x -= Config.turtle_speed
-        if self.__is_moving_right:
-            movement.x += Config.turtle_speed
+        if self.__is_removed:
+            movement = pygame.math.Vector2(abs(Config.turtle_speed) * (-1 if self.__direction_left else 1), abs(Config.turtle_speed))
+        else:
+            if self.__is_moving_up:
+                if self.__jumping_height < Config.turtle_max_jumping_height and not self.__is_moving_down:
+                    movement.y -= Config.turtle_speed
+                    self.__jumping_height += Config.turtle_speed * delta
+                else:
+                    self.__is_moving_down = True
+            if self.__is_moving_down:
+                movement.y += Config.turtle_speed
+            if self.__is_moving_left:
+                movement.x -= Config.turtle_speed
+            if self.__is_moving_right:
+                movement.x += Config.turtle_speed
 
-        self.__direction_left = True if movement.x < 0 or (self.__direction_left and movement.x == 0) else False
+            self.__direction_left = True if movement.x < 0 or (self.__direction_left and movement.x == 0) else False
 
         self.position += movement * delta
         self.check_bounds()
@@ -71,6 +78,7 @@ class Hero(GameObject):
 
         if self.__attack_index == 2:
             self.__attack_index = 0
+            SoundManager.instance().play_sound(Config.sfx_swordStrike_name)
 
         self.__walk_index = min(self.__walk_index + Config.turtle_speed * delta / 13, 3) if self.__is_moving_left ^ self.__is_moving_right else self.__walk_index
         self.__attack_index = min(self.__attack_index + Config.turtle_speed * delta / 13, 2) if self.__is_attacking else self.__attack_index
@@ -132,12 +140,23 @@ class Hero(GameObject):
         elif abs(item.rect.left - self.rect.right) < Config.collision_tolerance and self.__is_moving_right:
             self.position.x = item.position.x - item.rect[2] / 2 - self.rect[2] / 2
             self._center()
+            if type == 'finalFlag':
+                self.__world.game_end(Config.screen_size[1] - self.position.y)
 
     def player_win_enemy(self, type, enemy):
         if type == "mushroom":
             if ((abs(enemy.rect.top - self.rect.bottom) < Config.collision_tolerance and self.__is_moving_down) or
                 (abs(enemy.rect.right - self.rect.left) < Config.collision_tolerance and self.__direction_left and self.__is_attacking) or
                 (abs(enemy.rect.left - self.rect.right) < Config.collision_tolerance and not self.__direction_left and self.__is_attacking)):
-                return True, self.__direction_left
+                return 1, self.__direction_left
+            elif ((abs(enemy.rect.top - self.rect.bottom) < Config.collision_tolerance and not self.__is_moving_down) or
+                (abs(enemy.rect.right - self.rect.left) < Config.collision_tolerance and (self.__direction_left ^ self.__is_attacking)) or
+                (abs(enemy.rect.left - self.rect.right) < Config.collision_tolerance and (not self.__direction_left ^ self.__is_attacking))):
+                return 0, self.__direction_left
             else:
-                return False, self.__direction_left
+                return -1, self.__direction_left
+
+    def remove(self):
+        if not self.__is_removed:
+            self.__is_removed = True
+            SoundManager.instance().play_sound(Config.sfx_turtleDie_name)

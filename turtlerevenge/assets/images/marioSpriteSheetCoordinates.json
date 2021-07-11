@@ -11,6 +11,8 @@
     "castle": [270, 218, 83, 80],
     "pipe_vertical_end": [613, 45, 34, 33],
     "pipe_vertical_extension": [615, 82, 30, 16],
+    "pipe_horizontal_end": [573, 102, 32, 32],
+    "pipe_horizontal_conn": [610, 102, 34, 32],
     "block": [372, 143, 16, 15],
     "final_flag": [284, 45, 22, 169],
     "bricks": [373, 102, 16, 16],

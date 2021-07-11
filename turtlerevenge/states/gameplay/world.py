@@ -1,4 +1,3 @@
-from turtlerevenge.entities.friend import Friend
 import pygame
 
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
@@ -6,6 +5,7 @@ from turtlerevenge.assets.sound_manager import SoundManager
 from turtlerevenge.entities.rendergroup import RenderGroup
 from turtlerevenge.entities.hero import Hero
 from turtlerevenge.entities.fall import Fall
+from turtlerevenge.entities.friend import Friend
 from turtlerevenge.entities.mushroomEnemy import MushroomEnemy
 from turtlerevenge.entities.pizzaSlice import PizzaSlice
 from turtlerevenge.entities.sceneItem import SceneItem
@@ -28,14 +28,18 @@ class World:
 
         self.__pizzaSlices = 0
         self.__score = 0
-        self.__finishTime = 120
         self.__remainingLifes = 1
+        self.__remainingTime = Config.scene[Config.current_level]["availableTime"]
+        self.__start_ticks = pygame.time.get_ticks()
 
     def init(self):
-        # TODO: Cuenta atrás con vínculo al game over si se acaba
         # TODO: Pintar enemigos (plantas carnívoras, luigis, marios)
         # TODO: Colisiones con enemigos (si es por arriba o atacando hacia el lado del enemigo -> ganar, si no morir)
-        # TODO: Colisión con bandera final con asignación de puntos extra en función de lo alto que salte
+        # TODO: Nuevo entity tipo fall para acciones en tuberías (si estás colisionando y pulsas el botón para abajo en tuberías verticales o para la dirección de la tubería horizontal, next level)
+        # TODO: En config scenes, poner la posición inicial del player (Así coincide con puerta castillo o encima tubería...)
+        # TODO: En config scenes, poner el límite en x del escenario para saber cuando el player no puede avanzar más
+        # TODO: En config scenes, poner el color del fondo del escenario
+        # TODO: Corregir estructuras de bloque en nivel 2-2
 
         AssetManager.instance().load(AssetType.SpriteSheet, Config.mario_spritesheet_name, Config.mario_spritesheet_filename, data_filename = Config.mario_spritesheet_coordinates_filename)
         AssetManager.instance().load(AssetType.Font, Config.font_name_medium, Config.font_filename, font_size = Config.font_size_medium)
@@ -88,6 +92,11 @@ class World:
             for i in range(pipe[1]):
                 self.__sceneItemGroup.add(SceneItem(self, Config.scene_pipe_vertical_extension, (pipe[0] * 16 + 17, Config.screen_size[1] - 16 * i - 32 - 8)))
 
+        for pipe in Config.scene[Config.current_level]["pipes"]["horizontal"]:
+            self.__fallGroup.add(Fall(self, (pipe[0] * 16 - 12, Config.screen_size[1] - 32 - pipe[1] * 16 - 60)))
+            self.__sceneItemGroup.add(SceneItem(self, Config.scene_pipe_horizontal_end, (pipe[0] * 16 + 14, Config.screen_size[1] - 32 - pipe[1] * 16 - 16)))
+            self.__sceneItemGroup.add(SceneItem(self, Config.scene_pipe_horizontal_conn, (pipe[0] * 16 + 32 + 14, Config.screen_size[1] - 32 - pipe[1] * 16 - 16)))
+
         # Block structures
         for block in Config.scene[Config.current_level]["blockStructures"]:
             for i in range(block[2]):
@@ -97,13 +106,13 @@ class World:
                             self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i) * 16 - 12, Config.screen_size[1] - 32 - i * 16 - 16)))
                         self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + (j + i) * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
                         if i == (block[2] - 1) and j + i == (block[1] - 1):
-                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i + 1) * 12 + 8, Config.screen_size[1] - 32 - i * 16 - 16)))
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + (j + i) * 16 + 12, Config.screen_size[1] - 32 - i * 16 - 16)))
                     else:
                         if i == (block[2] - 1) and j == 0:
-                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 - 16, Config.screen_size[1] - 32 - i * 16 - 16)))
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 - 12, Config.screen_size[1] - 32 - i * 16 - 16)))
                         self.__sceneItemGroup.add(SceneItem(self, Config.scene_block, (block[0] * 16 + 8 + j * 16, Config.screen_size[1] - 32 - 8 - i * 16)))
                         if j + i == (block[1] - 1):
-                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 + 16, Config.screen_size[1] - 32 - i * 16 - 16)))
+                            self.__fallGroup.add(Fall(self, (block[0] * 16 + 8 + j * 16 + 12, Config.screen_size[1] - 32 - i * 16 - 16)))
 
                     if j + i >= (block[1] - 1):
                         break
@@ -144,6 +153,7 @@ class World:
 
         AssetManager.instance().load(AssetType.Music, Config.sound_action_name, Config.sound_action_filename)
         SoundManager.instance().play_music(Config.sound_action_name, False)
+        AssetManager.instance().load(AssetType.Sound, Config.sfx_prize_name, Config.sfx_prize_filename)
 
         self.__set_score_surface()
 
@@ -172,7 +182,7 @@ class World:
         # Player/pizzaSlices collisions
         for pizzaSlice in pygame.sprite.groupcollide(self.__pizzaSliceGroup, self.__playerGroup, True, False).keys():
             self.__pizzaSlices += 1
-            # TODO: Play sfx Sound
+            SoundManager.instance().play_sound(Config.sfx_prize_name)
 
         # Player/falls collisions
         for fall in pygame.sprite.groupcollide(self.__fallGroup, self.__playerGroup, False, False).keys():
@@ -189,24 +199,23 @@ class World:
         # FoolEnemies/player collisions
         for mushroomEnemy in pygame.sprite.groupcollide(self.__mushroomEnemyGroup, self.__playerGroup, False, False).keys():
             playerWinEnemy, is_player_moving_left = self.__playerGroup.sprites()[0].player_win_enemy("mushroom", mushroomEnemy)
-            if playerWinEnemy:
+            if playerWinEnemy == 1:
                 self.__score += Config.mushroom_killed_score if not mushroomEnemy.is_removed else 0
                 mushroomEnemy.remove(is_player_moving_left)
-            elif not mushroomEnemy.is_removed:
-                self.game_over()
+            elif playerWinEnemy == 0 and not mushroomEnemy.is_removed:
+                self.__playerGroup.sprites()[0].remove()
 
-        # FoolEnemies/sceneItems collisions
+        # Friends/sceneItems collisions
         for friend in pygame.sprite.groupcollide(self.__friendGroup, self.__sceneItemGroup, False, False).keys():
             friend.change_direction()
 
-        # FoolEnemies/falls collisions
+        # Friends/falls collisions
         for friend in pygame.sprite.groupcollide(self.__friendGroup, self.__fallGroup, False, False).keys():
             friend.change_direction()
 
         # Friends/player collisions
         for friend in pygame.sprite.groupcollide(self.__friendGroup, self.__playerGroup, False, False).keys():
-            # TODO: Play sfx sound sólo una vez
-            print('toco con el amigo')
+            friend.greet_hero()
 
         self.__set_score_surface()
 
@@ -242,13 +251,21 @@ class World:
         self.__playerGroup.empty()
 
     def game_over(self):
-        # TODO: Restar vida y si sólo quedaba la vida que estaba en curso entonces game over final
-        # TODO: Mientras está muerto que no se mueva el escenario en el tiempo ese que se espera
-        pygame.time.set_timer(game_over_event, Config.game_over_time, True)
-        SoundManager.instance().stop_music(Config.game_over_time)
-        self.screenCenterX = Config.screen_size[0] / 2
+        if self.__remainingLifes == 0:
+            # TODO: Mostrar puntuaciones y repintar todo el escenario
+            pygame.time.set_timer(game_over_event, Config.game_over_time, True)
+            SoundManager.instance().stop_music(Config.game_over_time)
+        else:
+            pygame.time.delay(750)
+            self.__playerGroup.empty()
+            self.screenCenterX = Config.screen_size[0] / 2
+            self.__remainingLifes -= 1
+            pygame.time.delay(500)
+            self.__playerGroup.add(Hero(self))
+            self.__remainingTime = Config.scene[Config.current_level]["availableTime"]
+            self.__start_ticks = pygame.time.get_ticks()
 
-    def game_end(self):
+    def game_end(self, finalFlagHeight):
         # TODO: Mostrar puntuaciones, sumar nivel y repintar todo el escenario, si el nivel terminado era el último entonces game end
         pygame.time.set_timer(end_game_event, Config.end_game_time, True)
         SoundManager.instance().stop_music(Config.end_game_time)
@@ -265,13 +282,22 @@ class World:
     def __set_score_surface(self):
         font = AssetManager.instance().get(AssetType.Font, Config.font_name_medium)
 
-        self.__label1 = UILabel((self.__get_score_xposition(5, 5), 25), font, "Lifes", Config.color_white)
-        self.__label2 = UILabel((self.__get_score_xposition(5, 5), 50), font, str(self.__remainingLifes), Config.color_white)
-        self.__label3 = UILabel((self.__get_score_xposition(1, 5), 25), font, "Score", Config.color_white)
-        self.__label4 = UILabel((self.__get_score_xposition(1, 5), 50), font, str(self.__score), Config.color_white)
-        self.__label5 = UILabel((self.__get_score_xposition(2, 5), 25), font, "Pizza Slices", Config.color_white)
-        self.__label6 = UILabel((self.__get_score_xposition(2, 5), 50), font, str(self.__pizzaSlices), Config.color_white)
-        self.__label7 = UILabel((self.__get_score_xposition(3, 5), 25), font, "Level", Config.color_white)
-        self.__label8 = UILabel((self.__get_score_xposition(3, 5), 50), font, str(Config.current_level + 1), Config.color_white)
-        self.__label9 = UILabel((self.__get_score_xposition(4, 5), 25), font, "Time", Config.color_white)
-        self.__label10 = UILabel((self.__get_score_xposition(4, 5), 50), font, str(self.__finishTime), Config.color_white)
+        self.__remainingTime = Config.scene[Config.current_level]["availableTime"] - (pygame.time.get_ticks() - self.__start_ticks) / 1000
+
+        if self.__remainingTime <= 0.0:
+            self.game_over()
+        else:
+            currentLevel = str(Config.current_level + 1) if Config.current_level == 1 else str(Config.current_level - 1)
+            if Config.current_level == 1 or Config.current_level == 2 or Config.current_level == 3:
+                currentLevel = '2 - ' + str(Config.current_level)
+
+            self.__label1 = UILabel((self.__get_score_xposition(5, 5), 25), font, "Lifes", Config.color_white)
+            self.__label2 = UILabel((self.__get_score_xposition(5, 5), 50), font, str(self.__remainingLifes), Config.color_white)
+            self.__label3 = UILabel((self.__get_score_xposition(1, 5), 25), font, "Score", Config.color_white)
+            self.__label4 = UILabel((self.__get_score_xposition(1, 5), 50), font, str(self.__score), Config.color_white)
+            self.__label5 = UILabel((self.__get_score_xposition(2, 5), 25), font, "Pizza Slices", Config.color_white)
+            self.__label6 = UILabel((self.__get_score_xposition(2, 5), 50), font, str(self.__pizzaSlices), Config.color_white)
+            self.__label7 = UILabel((self.__get_score_xposition(3, 5), 25), font, "Level", Config.color_white)
+            self.__label8 = UILabel((self.__get_score_xposition(3, 5), 50), font, currentLevel, Config.color_white)
+            self.__label9 = UILabel((self.__get_score_xposition(4, 5), 25), font, "Time", Config.color_white)
+            self.__label10 = UILabel((self.__get_score_xposition(4, 5), 50), font, str(int(self.__remainingTime)), Config.color_white)

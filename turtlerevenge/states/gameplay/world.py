@@ -331,6 +331,7 @@ class World:
             pygame.time.set_timer(game_over_event, Config.game_over_time, True)
             SoundManager.instance().stop_music(Config.game_over_time)
         else:
+            # TODO: Change turtle (Donatello, Michelangelo, Raphael, Leonardo)
             pygame.time.delay(750)
             self.__playerGroup.empty()
             self.screenCenterX = Config.screen_size[0] / 2

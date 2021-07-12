@@ -23,6 +23,8 @@ class NextLevel(State):
         AssetManager.instance().load(AssetType.Font, Config.font_name_massive, Config.font_filename, font_size = Config.font_size_massive)
 
     def enter(self):
+        # TODO: If level is 1 or 2 (intermediates levels), continue with next screen without show partial scores
+
         font_huge = AssetManager.instance().get(AssetType.Font, Config.font_name_huge)
         font_small = AssetManager.instance().get(AssetType.Font, Config.font_name_small)
 

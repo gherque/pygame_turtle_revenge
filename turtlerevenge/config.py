@@ -57,6 +57,10 @@ class Config:
     sfx_swordStrike_filename = ["turtlerevenge", "assets", "sfx", "swordStrike.wav"]
     sfx_turtleDie_name = "turtleDie"
     sfx_turtleDie_filename = ["turtlerevenge", "assets", "sfx", "turtleDie.wav"]
+    sfx_turtleJump_name = "turtleJump"
+    sfx_turtleJump_filename = ["turtlerevenge", "assets", "sfx", "turtleJump.wav"]
+    sfx_floorFall_name = "floorFall"
+    sfx_floorFall_filename = ["turtlerevenge", "assets", "sfx", "floorFall.wav"]
 
     # Turtle brand colors
     color_red = (237, 28, 36)

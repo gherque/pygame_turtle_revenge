@@ -4,6 +4,7 @@
 
 ### Doubts
 **Surface flip:** I need some sprites flipped to the left. I only see how to flip an image and not a clip of it, so I flip horizontally the spriteSheet image and then use same coordinates but with x changed to image width - x - sprite width. I don't know if there is a better way to do this.
+**Collisions:** Put the hero collisioning with floor I think is a bad idea due to too much collisions, so I put an object fall to check collisions near floor holes and only check that collisions to fall and the floor collisions when hero is falling to stop it. I don't know if that's the correct way to do it. Similar to that I put the portals to go to other levels when go throw a pipe.
 
 
 ### Resources

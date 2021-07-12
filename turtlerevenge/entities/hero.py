@@ -7,9 +7,6 @@ from turtlerevenge.entities.gameobject import GameObject
 
 class Hero(GameObject):
 
-# TODO: sonido al saltar
-# TODO: sonido al caer sobre algo firme
-
     def __init__(self, world):
         super().__init__()
         self.__is_moving_up = False
@@ -26,6 +23,8 @@ class Hero(GameObject):
         AssetManager.instance().load(AssetType.SpriteSheet, Config.turtle_spritesheet_name, Config.turtle_spritesheet_filename, data_filename = Config.turtle_spritesheet_coordinates_filename)
         AssetManager.instance().load(AssetType.Sound, Config.sfx_swordStrike_name, Config.sfx_swordStrike_filename)
         AssetManager.instance().load(AssetType.Sound, Config.sfx_turtleDie_name, Config.sfx_turtleDie_filename)
+        AssetManager.instance().load(AssetType.Sound, Config.sfx_turtleJump_name, Config.sfx_turtleJump_filename)
+        AssetManager.instance().load(AssetType.Sound, Config.sfx_floorFall_name, Config.sfx_floorFall_filename)
 
         _, clip = AssetManager.instance().get(AssetType.SpriteSheet, Config.turtle_walk[self.__walk_index], sheet_name = Config.turtle_spritesheet_name)
 
@@ -42,6 +41,8 @@ class Hero(GameObject):
     def handle_input(self, key, is_pressed):
         if key == pygame.K_UP:
             self.__is_moving_up = is_pressed
+            if is_pressed:
+                SoundManager.instance().play_sound(Config.sfx_turtleJump_name)
             self.__is_moving_down = True if not is_pressed else self.__is_moving_down
         elif key == pygame.K_LEFT:
             self.__is_moving_left = is_pressed
@@ -49,7 +50,8 @@ class Hero(GameObject):
             self.__is_moving_right = is_pressed
         elif key == pygame.K_SPACE:
             self.__is_attacking = is_pressed
-            SoundManager.instance().play_sound(Config.sfx_swordStrike_name)
+            if is_pressed:
+                SoundManager.instance().play_sound(Config.sfx_swordStrike_name)
 
     def update(self, delta):
         movement = pygame.math.Vector2(0.0, 0.0)
@@ -128,6 +130,7 @@ class Hero(GameObject):
 
     def check_collision_type(self, item, type):
         if abs(item.rect.top - self.rect.bottom) < Config.collision_tolerance and self.__is_moving_down:
+            SoundManager.instance().play_sound(Config.sfx_floorFall_name)
             self.__is_moving_down = False
             self.position.y = item.position.y - item.rect[3] / 2 - self.rect[3] / 2
             self.__jumping_height = 0
@@ -135,6 +138,7 @@ class Hero(GameObject):
         elif abs(item.rect.bottom - self.rect.top) < Config.collision_tolerance and self.__is_moving_up:
             self.__is_moving_down = True
             if type == 'addon' and item.addonRemaining > 0:
+                # TODO: Show pizza slice exiting from addon and flying to top screen
                 item.addonRemaining -= 1
                 Config.pizzaSlices += 1
                 SoundManager.instance().play_sound(Config.sfx_prize_name)

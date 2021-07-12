@@ -134,17 +134,18 @@ class Hero(GameObject):
             self._center()
         elif abs(item.rect.bottom - self.rect.top) < Config.collision_tolerance and self.__is_moving_up:
             self.__is_moving_down = True
-            if type == 'addon':
-                # TODO: Add the user the addon and remove next line
-                self.__is_moving_down = True
+            if type == 'addon' and item.addonRemaining > 0:
+                item.addonRemaining -= 1
+                Config.pizzaSlices += 1
+                SoundManager.instance().play_sound(Config.sfx_prize_name)
         if abs(item.rect.right - self.rect.left) < Config.collision_tolerance and self.__is_moving_left:
             self.position.x = item.position.x + item.rect[2] / 2 + self.rect[2] / 2
             self._center()
         elif abs(item.rect.left - self.rect.right) < Config.collision_tolerance and self.__is_moving_right:
             self.position.x = item.position.x - item.rect[2] / 2 - self.rect[2] / 2
             self._center()
-            if type == 'finalFlag':
-                self.__world.game_end(Config.screen_size[1] - self.position.y)
+            if item.type == Config.scene_final_flag:
+                self.__world.level_end(Config.screen_size[1] - self.position.y)
 
     def player_win_enemy(self, type, enemy):
         if type == "mushroom":

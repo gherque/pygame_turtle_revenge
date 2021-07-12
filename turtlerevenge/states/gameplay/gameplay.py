@@ -2,7 +2,7 @@ import pygame
 
 from turtlerevenge.states.state import State
 from turtlerevenge.states.gameplay.world import World
-from turtlerevenge.states.gameplay.events import game_over_event, end_game_event
+from turtlerevenge.states.gameplay.events import game_over_event, end_game_event, next_level_event
 
 class GamePlay(State):
 
@@ -20,6 +20,9 @@ class GamePlay(State):
             self.done = True
         if event.type == end_game_event:
             self.next_state = "GameEnd"
+            self.done = True
+        if event.type == next_level_event:
+            self.next_state = "NextLevel"
             self.done = True
 
     def update(self, delta_time):

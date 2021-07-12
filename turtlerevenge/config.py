@@ -6,11 +6,23 @@ class Config:
     screen_size = (640, 480)
     game_title = "Turtle Revenge"
     background_color = (0, 0, 0)
-    current_level = 4
-    total_levels = 5
+    current_level = 0
     collision_tolerance = 10
     game_over_time = 1000
-    end_game_time = 1000
+    end_game_time = 100
+    next_level_time = 100
+    score = 0
+    remaining_lifes = 1
+    pizzaSlices = 0
+    remainingTime = 0
+    finalFlagHeight = 0
+
+    # Scores
+    pizza_slice_score = 100
+    mushroom_killed_score = 200
+    seconds_remaining_score = 10
+    lifes_remaining_score = 250
+    finalFlag_height_score = 25
 
     # Font info
     font_filename = ["turtlerevenge", "assets", "fonts", "Turtles.ttf"]
@@ -283,11 +295,14 @@ class Config:
                 ("turtle", 107, 0)
             ],
             "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
+            ],
+            "portals": [
+                # Array of coordinates
             ]
         },
         # Level 2 - 1
         {
-            "availableTime": 240.0,
+            "availableTime": 30.0,
             "turtle_initial_position": (40, screen_size[1] - 32 - 24),
             "background_color": (0, 138, 197),
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
@@ -350,6 +365,9 @@ class Config:
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
             ],
             "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
+            ],
+            "portals": [ # Array of coordinates
+                (12, 4)
             ]
         },
         # Level 2 - 2
@@ -589,11 +607,14 @@ class Config:
                 ("turtle", 67, 0)
             ],
             "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
+            ],
+            "portals": [ # Array of coordinates
+                (168, 3)
             ]
         },
         # Level 2 - 3
         {
-            "availableTime": 240.0,
+            "availableTime": 30.0,
             "turtle_initial_position": (65, screen_size[1] - 32 - 32 - 24),
             "background_color": (0, 138, 197),
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
@@ -659,15 +680,19 @@ class Config:
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
             ],
             "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
+            ],
+            "portals": [
+                # Array of coordinates
             ]
         },
         # Level 3
         {
-            "availableTime": 240.0,
+            "availableTime": 180.0,
             "turtle_initial_position": (40, screen_size[1] - 32 - 24),
             "background_color": (0, 138, 197),
             "floorHoles": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
-                (16, 200)
+                (16, 116),
+                (57, 0)
             ],
             "floorHoles_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
             ],
@@ -718,7 +743,7 @@ class Config:
                 ]
             },
             "castle": (0 + 42, screen_size[1] - 16 * 2 - 40),
-            "big_castle": (300 * 16 + 75, screen_size[1] - 16 * 2 - 87),
+            "big_castle": (170 * 16 + 75, screen_size[1] - 16 * 2 - 87),
             "pipes": {
                 "vertical": [ # Array of objects with syntax (number of floor pieces before pipe, number of pipe extensions)
                 ],
@@ -726,61 +751,79 @@ class Config:
                 ]
             },
             "blockStructures": [ # Array of objects with syntax (number of floor pieces before blockStructure, width in number of blocks, height in number of blocks, orientationRight 'boolean')
+                (145, 8, 8, True)
             ],
             "blockStructures_dark": [ # Array of objects with syntax (number of floor pieces before hole after last one, number of pieces of hole)
             ],
-            "finalFlag": (1000, screen_size[1] - 16 * 2 - 85),
+            "finalFlag": (165 * 16, screen_size[1] - 16 * 2 - 85),
             "bricks": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
             ],
             "bricks_dark": [ # Array of objects with syntax (number of floor pieces before bricks, width in number of bricks objects, height in number of pieces upper floor)
             ],
             "addons": [ # Array of objects with syntax (number of floor pieces before addons, height in number of pieces upper floor)
+                (60, 4)
             ],
             "pizzaSlices": [ # Array of coordinates
+                (25 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (27 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (29 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (32 * 16 + 10, screen_size[1] - 3 * 16 - 12),
+                (35 * 16 + 10, screen_size[1] - 11 * 16 - 12),
+                (37 * 16 + 10, screen_size[1] - 11 * 16 - 12),
+                (49 * 16 + 10, screen_size[1] - 8 * 16 - 12),
+                (51 * 16 + 10, screen_size[1] - 8 * 16 - 12),
+                (60 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (62 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (64 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (85 * 16 + 10, screen_size[1] - 9 * 16 - 12),
+                (87 * 16 + 10, screen_size[1] - 9 * 16 - 12),
+                (89 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (91 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (93 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (95 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (116 * 16 + 10, screen_size[1] - 3 * 16 - 12),
+                (118 * 16 + 10, screen_size[1] - 3 * 16 - 12),
+                (123 * 16 + 10, screen_size[1] - 10 * 16 - 12),
+                (125 * 16 + 10, screen_size[1] - 10 * 16 - 12)
             ],
             "falls": [ # Array of objects with syntax (number of floor pieces before falls, height in number of pieces upper floor)
+                (59, 5),
+                (61, 5),
             ],
             "enemies": [ # Array of objects with syntax (type of enemy, number of floor pieces before enemy, height in number of pieces upper floor)
+                ("mushroom", 43, 9),
+                ("mushroom", 46, 9),
+                ("mushroom", 81, 7)
             ],
             "friends": [ # Array of objects with syntax (type of friend, number of floor pieces before friend, height in number of pieces upper floor)
+                ("turtle", 134, 0),
+                ("turtle", 29, 8)
             ],
             "trees": [ # Array of objects with syntax (number of floor pieces before tree trunk, height in number of pieces upper floor, width in number of pieces of tree trunk)
                 (19, 3, 2),
                 (27, 10, 3),
-                (25, 6, 6)
+                (25, 6, 6),
+                (33, 3, 1),
+                (36, 7, 3),
+                (41, 11, 5),
+                (51, 3, 2),
+                (62, 10, 2),
+                (61, 3, 3),
+                (67, 3, 3),
+                (72, 6, 1),
+                (79, 9, 4),
+                (91, 5, 4),
+                (103, 4, 2),
+                (109, 8, 6),
+                (118, 3, 1),
+                (121, 6, 2),
+                (127, 6, 2)
+            ],
+            "portals": [
+                # Array of coordinates
             ]
         }
     ]
-
-    # Scores
-    pizza_slice_score = 100
-    mushroom_killed_score = 200
-
-    # explosion_name = "explosion"
-    # explosion_image_filename = ["turtlerevenge", "assets", "images", "explosion.png"]
-    # explosion_size = (4,4)
-    # explosion_time_per_sequence = 40
-
-    # jungle_name = "jungle"
-    # jungle_image_filename = ["turtlerevenge", "assets", "images", "jungle.png"]
-    # jungle_speed = 0.3
-    # clouds_name = "clouds"
-    # clouds_image_filename = ["turtlerevenge", "assets", "images", "clouds.png"]
-    # clouds_speed = 0.4
-
-    # allied_gunfire_name = "allied_gunfire"
-    # allied_gunfire_filename = ["turtlerevenge", "assets", "sfx", "allied_gunfire.wav"]
-    # enemy_gunfire_name = "enemy_gunfire"
-    # enemy_gunfire_filename = ["turtlerevenge", "assets", "sfx", "enemy_gunfire.wav"]
-    # explosion1_name = "explosion1"
-    # explosion1_filename = ["turtlerevenge", "assets", "sfx", "explosion1.wav"]
-    # explosion2_name = "explosion2"
-    # explosion2_filename = ["turtlerevenge", "assets", "sfx", "explosion2.wav"]
-
-    # mission_theme_name = "mission"
-    # mission_theme_filename = ["turtlerevenge", "assets", "music", "mission.ogg"]
-
-    # allied_bullet_velocity = (0.0, -0.3)
 
     # Debug configuration
     fps = 60
@@ -790,32 +833,6 @@ class Config:
     debug = False
     debug_collider_color = (0, 255, 255)
     debug_render_color = (0, 0, 255)
-
-    # debug_way_point_color = (0,255,0)
-    # waypoints_area = (screen_size[0], screen_size[1] / 2)
-    # waypoints_separation = (120, 100)
-
-    # enemies_spawn_probability = 0.01
-    # enemies_max_waypoints = 5
-    # enemies_projectile_speed_range = (0.1, 0.4)
-    # enemies_kamikaze_probability = 0.3
-    # enemies_data = {
-    #     "raptor" : { "fire_rate" : 0.005, "speed" : 0.1, "acceleration" : 0.005},
-    #     "avenger" : { "fire_rate" : 0.01, "speed" : 0.12, "acceleration" : 0.005} }
-
-    # enemies_spawn_points = [(-100, 0),
-    #                         (100, -100),
-    #                         (screen_size[0]/2, -100),
-    #                         (screen_size[0] - 100 , -100),
-    #                         (screen_size[0] + 100, 0)]
-
-    # enemies_end_points = [(-100, 0),
-    #                         (100, -100),
-    #                         (-100, screen_size[1]),
-    #                         (100, screen_size[1] + 100),
-    #                         (screen_size[0]/2, screen_size[1] + 100),
-    #                         (screen_size[0] - 100 , screen_size[1] + 100),
-    #                         (screen_size[0] + 100, screen_size[1])]
 
     def __init__(self):
         pass

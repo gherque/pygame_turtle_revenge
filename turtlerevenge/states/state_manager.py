@@ -4,6 +4,7 @@ from turtlerevenge.states.intro import Intro
 from turtlerevenge.states.gameEnd import GameEnd
 from turtlerevenge.states.gameOver import GameOver
 from turtlerevenge.states.gameplay.gameplay import GamePlay
+from turtlerevenge.states.nextLevel import NextLevel
 
 class StateManager:
 
@@ -13,7 +14,8 @@ class StateManager:
             "GamePlay": GamePlay(),
             "About": About(),
             "GameOver": GameOver(),
-            "GameEnd": GameEnd()
+            "GameEnd": GameEnd(),
+            "NextLevel": NextLevel()
         }
 
         self.__current_state_name = "Intro"  # Start State

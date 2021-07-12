@@ -1,3 +1,4 @@
+from turtlerevenge.entities.nextLevelPortal import NextLevelPortal
 import pygame
 
 from turtlerevenge.assets.asset_manager import AssetManager, AssetType
@@ -12,12 +13,11 @@ from turtlerevenge.entities.rendergroup import RenderGroup
 from turtlerevenge.entities.sceneItem import SceneItem
 from turtlerevenge.ui.label import UILabel
 from turtlerevenge.config import Config
-from turtlerevenge.states.gameplay.events import game_over_event, end_game_event
+from turtlerevenge.states.gameplay.events import game_over_event, end_game_event, next_level_event
 
 class World:
 
     def __init__(self):
-        self.screenCenterX = Config.screen_size[0] / 2
         self.__playerGroup = RenderGroup()
         self.__sceneItemGroup = RenderGroup()
         self.__transparentSceneItems = RenderGroup()
@@ -27,16 +27,12 @@ class World:
         self.__mushroomEnemyGroup = RenderGroup()
         self.__carnivorousPlantEnemyGroup = RenderGroup()
         self.__friendGroup = RenderGroup()
-
-        self.__pizzaSlices = 0
-        self.__score = 0
-        self.__remainingLifes = 1
-        self.__remainingTime = Config.scene[Config.current_level]["availableTime"]
-        self.__start_ticks = pygame.time.get_ticks()
+        self.__nextLevelPortalGroup = RenderGroup()
 
     def init(self):
-        # TODO: Pintar enemigos (luigis, marios)
-        # TODO: Nuevo entity tipo fall para acciones en tuberías (si estás colisionando y pulsas el botón para abajo en tuberías verticales o para la dirección de la tubería horizontal, next level)
+        self.screenCenterX = Config.screen_size[0] / 2
+        Config.remainingTime = Config.scene[Config.current_level]["availableTime"]
+        self.__start_ticks = pygame.time.get_ticks()
 
         AssetManager.instance().load(AssetType.SpriteSheet, Config.mario_spritesheet_name, Config.mario_spritesheet_filename, data_filename = Config.mario_spritesheet_coordinates_filename)
         AssetManager.instance().load(AssetType.Font, Config.font_name_medium, Config.font_filename, font_size = Config.font_size_medium)
@@ -67,16 +63,16 @@ class World:
         for tree in Config.scene[Config.current_level]["trees"]:
             for i in range(tree[1]): # height
                 for j in range(tree[2]): # width
-                    # TODO: si estás en última altura pintas césped (uno antes del inicio left, luego center hasta el width y uno right)
-                    # TODO: si no estás en última altura pintas bloque
                     if i == tree[1] - 1: # last level
                         if j == 0:
+                            self.__fallGroup.add(Fall(self, ((tree[0] - 1) * 16 + j * 16 - 12, Config.screen_size[1] - 16 * i - 12)))
                             self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_top_left_block, ((tree[0] - 1) * 16 + j * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
-                        elif j == tree[2] - 1:
+                        if j == tree[2] - 1:
                             self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_top_right_block, (tree[0] * 16 + (j + 1) * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
+                            self.__fallGroup.add(Fall(self, ((tree[0] - 1) * 16 + (j + 3) * 16 + 12, Config.screen_size[1] - 16 * i - 12)))
                         self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_top_center_block, (tree[0] * 16 + j * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
                     else:
-                        self.__sceneItemGroup.add(SceneItem(self, Config.scene_tree_trunk_block, (tree[0] * 16 + j * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
+                        self.__transparentSceneItems.add(SceneItem(self, Config.scene_tree_trunk_block, (tree[0] * 16 + j * 16 + 8, Config.screen_size[1] - 16 * i - 8)))
 
         # Castles
         self.__transparentSceneItems.add(SceneItem(self, Config.scene_castle, Config.scene[Config.current_level]["castle"]))
@@ -211,6 +207,10 @@ class World:
             if friend[0] == "turtle":
                 self.__friendGroup.add(Friend(self, (friend[1] * 16 + 9, Config.screen_size[1] - 32 - friend[2] * 16 - 12)))
 
+        # Next Level Portals
+        for portal in Config.scene[Config.current_level]["portals"]:
+            self.__nextLevelPortalGroup.add(NextLevelPortal(self, (portal[0] * 16 + 9, Config.screen_size[1] - 32 - portal[1] * 16 - 12)))
+
         self.__playerGroup.add(Hero(self))
 
         AssetManager.instance().load(AssetType.Music, Config.sound_action_name, Config.sound_action_filename)
@@ -232,6 +232,7 @@ class World:
         self.__mushroomEnemyGroup.update(delta_time)
         self.__carnivorousPlantEnemyGroup.update(delta_time)
         self.__friendGroup.update(delta_time)
+        self.__nextLevelPortalGroup.update(delta_time)
         self.__playerGroup.update(delta_time)
 
         # Player/sceneItems collisions
@@ -244,7 +245,7 @@ class World:
 
         # Player/pizzaSlices collisions
         for pizzaSlice in pygame.sprite.groupcollide(self.__pizzaSliceGroup, self.__playerGroup, True, False).keys():
-            self.__pizzaSlices += 1
+            Config.pizzaSlices += 1
             SoundManager.instance().play_sound(Config.sfx_prize_name)
 
         # Player/falls collisions
@@ -263,7 +264,7 @@ class World:
         for mushroomEnemy in pygame.sprite.groupcollide(self.__mushroomEnemyGroup, self.__playerGroup, False, False).keys():
             playerWinEnemy, is_player_moving_left = self.__playerGroup.sprites()[0].player_win_enemy("mushroom", mushroomEnemy)
             if playerWinEnemy == 1:
-                self.__score += Config.mushroom_killed_score if not mushroomEnemy.is_removed else 0
+                Config.score += Config.mushroom_killed_score if not mushroomEnemy.is_removed else 0
                 mushroomEnemy.remove(is_player_moving_left)
             elif playerWinEnemy == 0 and not mushroomEnemy.is_removed:
                 self.__playerGroup.sprites()[0].remove()
@@ -284,6 +285,10 @@ class World:
         for carnivorousPlantEnemy in pygame.sprite.groupcollide(self.__carnivorousPlantEnemyGroup, self.__playerGroup, False, False).keys():
             self.__playerGroup.sprites()[0].remove()
 
+        # NextLevelPortal/player collisions
+        for portal in pygame.sprite.groupcollide(self.__nextLevelPortalGroup, self.__playerGroup, False, False).keys():
+            self.level_end(0)
+
         self.__set_score_surface()
 
     def render(self, surface):
@@ -295,6 +300,7 @@ class World:
         self.__fallGroup.draw(surface)
         self.__mushroomEnemyGroup.draw(surface)
         self.__friendGroup.draw(surface)
+        self.__nextLevelPortalGroup.draw(surface)
         self.__playerGroup.draw(surface)
 
         self.__label1.render(surface)
@@ -317,27 +323,28 @@ class World:
         self.__mushroomEnemyGroup.empty()
         self.__friendGroup.empty()
         self.__carnivorousPlantEnemyGroup.empty()
+        self.__nextLevelPortalGroup.empty()
         self.__playerGroup.empty()
 
     def game_over(self):
-        if self.__remainingLifes == 0:
-            # TODO: Mostrar puntuaciones y repintar todo el escenario
+        if Config.remaining_lifes == 0:
             pygame.time.set_timer(game_over_event, Config.game_over_time, True)
             SoundManager.instance().stop_music(Config.game_over_time)
         else:
             pygame.time.delay(750)
             self.__playerGroup.empty()
             self.screenCenterX = Config.screen_size[0] / 2
-            self.__remainingLifes -= 1
+            Config.remaining_lifes -= 1
             pygame.time.delay(500)
             self.__playerGroup.add(Hero(self))
-            self.__remainingTime = Config.scene[Config.current_level]["availableTime"]
+            Config.remainingTime = Config.scene[Config.current_level]["availableTime"]
             self.__start_ticks = pygame.time.get_ticks()
 
-    def game_end(self, finalFlagHeight):
-        # TODO: Mostrar puntuaciones, sumar nivel y repintar todo el escenario, si el nivel terminado era el último entonces game end
-        pygame.time.set_timer(end_game_event, Config.end_game_time, True)
-        SoundManager.instance().stop_music(Config.end_game_time)
+    def level_end(self, finalFlagHeight):
+        if Config.finalFlagHeight == 0:
+            Config.finalFlagHeight = finalFlagHeight
+            pygame.time.set_timer(next_level_event, Config.next_level_time, True)
+            SoundManager.instance().stop_music(Config.next_level_time)
 
     def get_hero_pos(self):
         if len(self.__playerGroup) > 0:
@@ -351,22 +358,22 @@ class World:
     def __set_score_surface(self):
         font = AssetManager.instance().get(AssetType.Font, Config.font_name_medium)
 
-        self.__remainingTime = Config.scene[Config.current_level]["availableTime"] - (pygame.time.get_ticks() - self.__start_ticks) / 1000
+        Config.remainingTime = Config.scene[Config.current_level]["availableTime"] - (pygame.time.get_ticks() - self.__start_ticks) / 1000
 
-        if self.__remainingTime <= 0.0:
+        if Config.remainingTime <= 0.0:
             self.game_over()
         else:
-            currentLevel = str(Config.current_level + 1) if Config.current_level == 1 else str(Config.current_level - 1)
+            currentLevel = str(Config.current_level + 1) if Config.current_level == 0 else str(Config.current_level - 1)
             if Config.current_level == 1 or Config.current_level == 2 or Config.current_level == 3:
                 currentLevel = '2 - ' + str(Config.current_level)
 
             self.__label1 = UILabel((self.__get_score_xposition(5, 5), 25), font, "Lifes", Config.color_white)
-            self.__label2 = UILabel((self.__get_score_xposition(5, 5), 50), font, str(self.__remainingLifes), Config.color_white)
+            self.__label2 = UILabel((self.__get_score_xposition(5, 5), 50), font, str(Config.remaining_lifes), Config.color_white)
             self.__label3 = UILabel((self.__get_score_xposition(1, 5), 25), font, "Score", Config.color_white)
-            self.__label4 = UILabel((self.__get_score_xposition(1, 5), 50), font, str(self.__score), Config.color_white)
+            self.__label4 = UILabel((self.__get_score_xposition(1, 5), 50), font, str(Config.score), Config.color_white)
             self.__label5 = UILabel((self.__get_score_xposition(2, 5), 25), font, "Pizza Slices", Config.color_white)
-            self.__label6 = UILabel((self.__get_score_xposition(2, 5), 50), font, str(self.__pizzaSlices), Config.color_white)
+            self.__label6 = UILabel((self.__get_score_xposition(2, 5), 50), font, str(Config.pizzaSlices), Config.color_white)
             self.__label7 = UILabel((self.__get_score_xposition(3, 5), 25), font, "Level", Config.color_white)
             self.__label8 = UILabel((self.__get_score_xposition(3, 5), 50), font, currentLevel, Config.color_white)
             self.__label9 = UILabel((self.__get_score_xposition(4, 5), 25), font, "Time", Config.color_white)
-            self.__label10 = UILabel((self.__get_score_xposition(4, 5), 50), font, str(int(self.__remainingTime)), Config.color_white)
+            self.__label10 = UILabel((self.__get_score_xposition(4, 5), 50), font, str(int(Config.remainingTime)), Config.color_white)
